@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-// Import komponen (Perhatikan perubahan nama file)
+// Import komponen
 import Navbar from './components/Navbar';
-import Home from './components/Home';           // <--- Ganti HeroSection jadi Home
-import InfoSection from './components/InfoSection'; // <--- InfoSection (Khusus Pengumuman)
-import RtDusunVII from './components/RtDusunVII';   // <--- File Baru (Khusus Data RT)
+import Home from './components/Home';
+import InfoSection from './components/InfoSection';
+import RtDusunVII from './components/RtDusunVII';
 import ActivityGallery from './components/ActivityGallery';
 import AboutSection from './components/AboutSection';
 import ContactSection from './components/ContactSection';
@@ -13,6 +13,14 @@ import { Loader2 } from 'lucide-react';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
+  // Default halaman adalah 'home'
+  const [currentPage, setCurrentPage] = useState('home'); 
+
+  // FUNGSI UNTUK PINDAH HALAMAN
+  const navigateTo = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0); // Otomatis scroll ke atas saat pindah halaman
+  };
 
   // DATA PRIBADI (Pusat Data)
   const personalInfo = {
@@ -48,36 +56,64 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 animate-[fadeIn_1s_ease-in-out]">
+    <div className="min-h-screen font-sans text-slate-800 animate-[fadeIn_1s_ease-in-out] relative">
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes blob {
+          0% { transform: translate(0px, 0px) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+          100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob { animation: blob 10s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
       `}</style>
 
-      {/* NAVIGASI */}
-      <Navbar personalInfo={personalInfo} />
-      
-      {/* HALAMAN DEPAN (HOME) */}
-      <Home personalInfo={personalInfo} />
-      
-      {/* PAPAN INFO PENGUMUMAN (BANJIR DLL) */}
-      <InfoSection />
+      {/* --- GLOBAL BACKGROUND (WALLPAPER HIDUP - POLOS TANPA KOTAK) --- */}
+      <div className="fixed inset-0 z-[-1] overflow-hidden bg-slate-50 pointer-events-none">
+        {/* Blob 1 */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        {/* Blob 2 */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+        {/* Blob 3 */}
+        <div className="absolute -bottom-32 left-20 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+      </div>
 
-      {/* DATA RT & RELAWAN (FILE BARU) */}
-      <RtDusunVII />
+      <Navbar personalInfo={personalInfo} navigateTo={navigateTo} currentPage={currentPage} />
       
-      {/* GALERI KEGIATAN */}
-      <ActivityGallery />
+      {/* --- KONDISIONAL RENDERING (MENGGANTI HALAMAN) --- */}
+
+      {/* HALAMAN BERANDA (HOME PAGE) */}
+      {currentPage === 'home' && (
+        <>
+          <Home personalInfo={personalInfo} /> 
+          <InfoSection />
+          <AboutSection /> 
+          {/* ActivityGallery & RtDusunVII dipindahkan ke halaman terpisah */}
+        </>
+      )}
+
+      {/* HALAMAN DAFTAR RT (PAGE BARU) */}
+      {currentPage === 'rt_list' && (
+        <RtDusunVII fullPage={true} />
+      )}
+
+      {/* HALAMAN VISI MISI (PAGE BARU) */}
+      {currentPage === 'about_page' && (
+        <AboutSection fullPage={true} />
+      )}
       
-      {/* TENTANG & VISI MISI */}
-      <AboutSection />
-      
-      {/* KONTAK */}
+      {/* HALAMAN DOKUMENTASI KEGIATAN (PAGE BARU) */}
+      {currentPage === 'activity_page' && (
+        <ActivityGallery fullPage={true} />
+      )}
+
+      {/* Footer dan ContactSection tetap tampil di semua halaman */}
       <ContactSection personalInfo={personalInfo} />
-      
-      {/* FOOTER */}
       <Footer personalInfo={personalInfo} />
     </div>
   );
