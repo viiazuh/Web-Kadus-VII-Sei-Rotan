@@ -8,22 +8,22 @@ export default function RtDusunVII() {
   // NAMA DIKOSONGKAN DULU ("-") SESUAI PERMINTAAN
   // Agar aman dan tidak ada kesalahan data saat deploy ke Vercel.
   const dataRelawan = [
-    { id: 1, nama: "-", wilayah: "RT 01", status: "Aktif" },
-    { id: 2, nama: "-", wilayah: "RT 02", status: "Aktif" },
-    { id: 3, nama: "-", wilayah: "RT 03", status: "Aktif" },
-    { id: 4, nama: "-", wilayah: "RT 04", status: "Aktif" },
-    { id: 5, nama: "-", wilayah: "RT 05", status: "Aktif" },
-    { id: 6, nama: "-", wilayah: "RT 06", status: "Aktif" },
-    { id: 7, nama: "-", wilayah: "RT 07", status: "Aktif" },
-    { id: 8, nama: "-", wilayah: "RT 08", status: "Aktif" },
-    { id: 9, nama: "-", wilayah: "RT 09", status: "Aktif" },
-    { id: 10, nama: "-", wilayah: "RT 10", status: "Aktif" },
-    { id: 11, nama: "-", wilayah: "RT 11", status: "Aktif" },
-    { id: 12, nama: "-", wilayah: "RT 12", status: "Aktif" },
-    { id: 13, nama: "-", wilayah: "RT 13", status: "Aktif" },
-    { id: 14, nama: "-", wilayah: "RT 14", status: "Aktif" },
-    { id: 15, nama: "-", wilayah: "RT 15", status: "Aktif" },
-    { id: 16, nama: "-", wilayah: "RT 16", status: "Aktif" },
+    { id: 1, nama: "Jumangin", wilayah: "RT 01", status: "Aktif" },
+    { id: 2, nama: "Sunarto ", wilayah: "RT 02", status: "Aktif" },
+    { id: 3, nama: "Sudarmono", wilayah: "RT 03", status: "Aktif" },
+    { id: 4, nama: "Sugianto ", wilayah: "RT 04", status: "Aktif" },
+    { id: 5, nama: "Sukiran", wilayah: "RT 05", status: "Aktif" },
+    { id: 6, nama: "Wagiono", wilayah: "RT 06", status: "Aktif" },
+    { id: 7, nama: "Gunawan", wilayah: "RT 07", status: "Aktif" },
+    { id: 8, nama: "Muhammad Taufik ", wilayah: "RT 08", status: "Aktif" },
+    { id: 9, nama: "Mulyadi", wilayah: "RT 09", status: "Aktif" },
+    { id: 10, nama: "Supriandi ", wilayah: "RT 10", status: "Aktif" },
+    { id: 11, nama: "Bambang Irawan", wilayah: "RT 11", status: "Aktif" },
+    { id: 12, nama: "Sugiman", wilayah: "RT 12", status: "Aktif" },
+    { id: 13, nama: "Rudi", wilayah: "RT 13", status: "Aktif" },
+    { id: 14, nama: "Misdi ", wilayah: "RT 14", status: "Aktif" },
+    { id: 15, nama: "Deni Syahputra ", wilayah: "RT 15", status: "Aktif" },
+    { id: 16, nama: "Muliadi", wilayah: "RT 16", status: "Aktif" },
   ];
 
   const displayedData = showAll ? dataRelawan : dataRelawan.slice(0, 4); // Tampilkan 4 di awal
