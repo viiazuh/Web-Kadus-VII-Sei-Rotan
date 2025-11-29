@@ -20,7 +20,7 @@ export default function AboutSection({ fullPage }) { // Tambahkan prop fullPage
             </div>
             <h4 className="text-2xl font-bold text-slate-900 mb-6">Visi & Misi</h4>
             <div className="space-y-4">
-                <p className="text-2xl text-slate-800 font-serif italic leading-relaxed">"Menjunjung tinggi adat istiadat."</p>
+                <p className="text-2xl text-slate-800 font-serif italic leading-relaxed">"Menjunjung tinggi adat istiadat dan kebersamaan."</p>
                 <div className="w-16 h-1 bg-blue-200 mx-auto rounded-full my-4"></div>
                 <p className="text-slate-500 text-sm font-medium tracking-wide">KEPALA DUSUN VII DESA SEI ROTAN</p>
             </div>
