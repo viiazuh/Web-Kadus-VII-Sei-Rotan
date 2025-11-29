@@ -10,7 +10,7 @@ export default function AboutSection() {
           <h3 className="text-3xl md:text-4xl font-bold text-slate-900">Prinsip Kepemimpinan</h3>
         </div>
 
-        {/* Layout diubah menjadi Single Column Center karena Kolaborasi dihapus */}
+        {/* Layout Single Column Center */}
         <div className="max-w-3xl mx-auto">
           {/* Visi Misi Card */}
           <div className="bg-white p-10 rounded-3xl shadow-lg hover:shadow-xl transition text-center border-t-8 border-blue-600 relative overflow-hidden">
@@ -24,12 +24,15 @@ export default function AboutSection() {
             <h4 className="text-2xl font-bold text-slate-900 mb-6">Visi & Misi</h4>
             
             <div className="space-y-4">
-                <p className="text-lg text-slate-700 font-medium leading-relaxed">
-                "Menjunjung tinggi adat istiadat, mempererat tali silaturahmi, dan menciptakan lingkungan yang aman serta harmonis."
+                {/* TEKS UTAMA (Diupdate) */}
+                <p className="text-2xl text-slate-800 font-serif italic leading-relaxed">
+                  "Menjunjung tinggi adat istiadat."
                 </p>
-                <div className="w-16 h-1 bg-blue-200 mx-auto rounded-full"></div>
-                <p className="text-slate-500 text-sm">
-                    Kepala Dusun VII Sei Rotan.
+                
+                <div className="w-16 h-1 bg-blue-200 mx-auto rounded-full my-4"></div>
+                
+                <p className="text-slate-500 text-sm font-medium tracking-wide">
+                    KEPALA DUSUN VII DESA SEI ROTAN
                 </p>
             </div>
           </div>
