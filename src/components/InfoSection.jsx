@@ -27,7 +27,7 @@ export default function InfoSection() {
           </p>
         </div>
 
-        {/* Alert Banjir */}
+        {/* Alert Banjir (Konten Diperbarui Sesuai Permintaan) */}
         {showAnnouncement ? (
           <div className="max-w-5xl mx-auto mb-16">
             <div className="relative overflow-hidden bg-red-50/90 border border-red-200 rounded-3xl p-1 shadow-2xl shadow-red-200/50 backdrop-blur-md">
@@ -39,13 +39,23 @@ export default function InfoSection() {
                   </div>
                 </div>
                 <div className="flex-1 pt-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-xl font-bold text-red-900">PERINGATAN: WASPADA BANJIR</h3>
-                    <span className="px-3 py-1 bg-red-600 text-white text-[10px] font-bold uppercase tracking-wider rounded-full shadow-sm animate-pulse">SIAGA 1</span>
+                  <div className="flex items-center gap-3 mb-4">
+                    <h3 className="text-xl font-bold text-red-900">PERINGATAN: KONDISI BANJIR DUSUN VII</h3>
+                    <span className="px-3 py-1 bg-red-600 text-white text-[10px] font-bold uppercase tracking-wider rounded-full shadow-sm animate-pulse">SIAGA DARURAT</span>
                   </div>
-                  <p className="text-slate-700 leading-relaxed font-medium">
-                    Dihimbau kepada seluruh masyarakat Dusun 7, dikarenakan kondisi banjir saat ini, mohon <strong>AWAS HEWAN MELATA</strong> (seperti ular/lipan) yang mungkin masuk ke dalam rumah.
+                  
+                  <p className="text-slate-700 leading-relaxed font-medium mb-4">
+                    Assalamualaikum warahmatullahi wabarokatuh. Semoga kita dalam lindungan Allah SWT Yang Maha Pengasih Maha Penyayang. Diberitahukan kepada warga dusun VII desa sei rotan. Dihimbaukan:
                   </p>
+                  
+                  <ul className="text-slate-700 list-disc list-inside space-y-2 pl-4">
+                      <li>Untuk menjaga anak-anak kita bermain di luar rumah dalam situasi banjir.</li>
+                      <li>Menjaga harta benda untuk ditempatkan di tempat yang aman, dan keamanan arus listrik.</li>
+                      <li>Jika dianggap perlu untuk mengungsi akibat dampak banjir, pemerintah desa Sei Rotan menyediakan tempat mengungsi di aula kantor desa Sei Rotan.</li>
+                      <li>Waspada dengan binatang melata (ular, kelabang, biawak, dll.).</li>
+                      <li>Koordinasi kepada RT setempat, atau kepala dusun VII.</li>
+                  </ul>
+
                 </div>
                 <button onClick={() => setShowAnnouncement(false)} className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all">
                   <X size={20} />

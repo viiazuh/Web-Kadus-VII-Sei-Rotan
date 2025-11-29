@@ -3,7 +3,7 @@ import { Star } from 'lucide-react';
 
 export default function Home({ personalInfo }) {
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 pb-10 overflow-hidden bg-slate-50">
+    <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 pb-10 overflow-hidden">
       
       {/* --- CSS ANIMASI KUSTOM --- */}
       <style>{`
@@ -48,10 +48,14 @@ export default function Home({ personalInfo }) {
 
       {/* --- BACKGROUND DYNAMIC SHAPES --- */}
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+        {/* Blob 1 */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        {/* Blob 2 */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+        {/* Blob 3 */}
         <div className="absolute -bottom-32 left-20 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        {/* Pattern Grid Overlay (Dihapus agar bersih) */}
+        {/* <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div> */}
       </div>
 
       <div className="container max-w-7xl mx-auto px-6 relative z-10">
@@ -88,38 +92,48 @@ export default function Home({ personalInfo }) {
               Membangun desa dengan hati, transparansi, dan gotong royong untuk kemajuan bersama Dusun VII.
             </p>
 
-            {/* Statistik */}
-            <div className="animate-fade-up delay-500 flex items-center justify-center lg:justify-start gap-8 border-t border-slate-200 pt-8">
-                <div>
+            {/* Statistik BARU */}
+            <div className="animate-fade-up delay-500 flex flex-wrap justify-center lg:justify-start gap-y-4 gap-x-8 border-t border-slate-200 pt-8">
+                {/* 1. RT Aktif */}
+                <div className="w-1/3 sm:w-auto">
                     <p className="text-3xl font-bold text-slate-800">16</p>
                     <p className="text-sm text-slate-500 uppercase tracking-wider">RT Aktif</p>
                 </div>
-                <div className="w-px h-10 bg-slate-200"></div>
-                <div>
+                
+                {/* Garis pemisah hanya di desktop */}
+                <div className="hidden lg:block w-px h-10 bg-slate-200"></div>
+
+                {/* 2. KK Terdaftar (BARU) */}
+                <div className="w-1/3 sm:w-auto">
+                    <p className="text-3xl font-bold text-slate-800">800+</p>
+                    <p className="text-sm text-slate-500 uppercase tracking-wider">Kepala Keluarga</p>
+                </div>
+
+                {/* Garis pemisah hanya di desktop */}
+                <div className="hidden lg:block w-px h-10 bg-slate-200"></div>
+                
+                {/* 3. Layanan */}
+                <div className="w-1/3 sm:w-auto">
                     <p className="text-3xl font-bold text-slate-800">24/7</p>
                     <p className="text-sm text-slate-500 uppercase tracking-wider">Layanan</p>
                 </div>
             </div>
           </div>
 
-          {/* --- KOLOM FOTO (PERBAIKAN) --- */}
+          {/* --- KOLOM FOTO --- */}
           <div className="w-full lg:w-1/2 flex justify-center relative animate-fade-up delay-200">
             {/* Elemen Dekoratif Belakang */}
             <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-cyan-400 rounded-[2rem] rotate-6 scale-95 blur-2xl opacity-20 animate-pulse"></div>
             
             {/* Bingkai Foto */}
-            <div className="relative w-72 h-96 md:w-96 md:h-[32rem] rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white bg-white animate-float-img">
-                {/* PERBAIKAN: 
-                   1. Menghapus div placeholder "bg-slate-100" yang menutupi foto.
-                   2. Menambahkan "relative z-10" pada gambar agar pasti di depan.
-                */}
+            <div className="relative w-72 h-96 md:w-96 md:h-[32rem] rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white bg-white animate-float-img group">
+                
                 <img 
                     src="/maslilik.jpg" 
                     alt="H. Lilik Suheri" 
                     className="relative z-10 w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                 />
                 
-                {/* BAGIAN TEKS "SIAP MENGAYOMI" SUDAH DIHAPUS TOTAL DI SINI */}
             </div>
           </div>
 
