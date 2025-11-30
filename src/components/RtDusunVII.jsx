@@ -31,7 +31,7 @@ export default function RtDusunVII({ fullPage }) {
         id: 1, 
         nama: "ZUHERAWATI", 
         // Menggunakan placeholder image, Bapak bisa ganti URL ini dengan foto Ibu Zuherawati
-        imgUrl: "Zuherawati.png", 
+        imgUrl: "/foto/zuherawati.png", 
         status: "Aktif",
         jabatan: [
             "Pengurus Wirid Akbar Kecamatan Percut Sei Tuan",
