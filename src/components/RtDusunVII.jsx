@@ -69,6 +69,7 @@ export default function RtDusunVII({ fullPage }) {
             "Sekretaris Wirid Akbar Desa Sei Rotan",
             "Sekretaris Perwiritan Nurul Huda Dusun 7 & 8 Sei Rotan",
             "Pengurus Anak Yatim Piatu Dusun 7 Sei Rotan",
+            "Kader SPM",
         ] 
     },
     { 
@@ -114,7 +115,7 @@ export default function RtDusunVII({ fullPage }) {
         imgUrl: "/fotom/suryani.png", 
         status: "Aktif",
         jabatan: [
-            "Kader SPM dusun 7 Sri rotan",
+            "Kader SPM dusun 7 ",
         ] 
     },
     { 
@@ -123,7 +124,7 @@ export default function RtDusunVII({ fullPage }) {
         imgUrl: "/fotom/yuni.png", 
         status: "Aktif",
         jabatan: [
-            "Kader SPM dusun 7 Sri rotan",
+            "Kader SPM dusun 7",
         ] 
     },
   ];
