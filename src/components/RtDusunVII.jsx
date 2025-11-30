@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { CheckCircle2, ChevronDown, Users, Building2, MapPin } from 'lucide-react';
+import { CheckCircle2, ChevronDown, Users, Building2, MapPin, Group, Heart, Briefcase } from 'lucide-react';
 
-export default function RtDusunVII({ fullPage }) { // Tambahkan prop fullPage
+export default function RtDusunVII({ fullPage }) { 
   const [showAll, setShowAll] = useState(false);
+  const [activeTab, setActiveTab] = useState('rt'); // State untuk tab aktif
 
-  // DATA NAMA KETUA RT SUDAH DIMASUKKAN BERURUTAN
-  const dataRelawan = [
+  // --- DATA KETUA RT ---
+  const dataRt = [
     { id: 1, nama: "Jumangin", wilayah: "RT 01", status: "Aktif" },
     { id: 2, nama: "Sunarto", wilayah: "RT 02", status: "Aktif" },
     { id: 3, nama: "Sudarmono", wilayah: "RT 03", status: "Aktif" },
@@ -24,7 +25,35 @@ export default function RtDusunVII({ fullPage }) { // Tambahkan prop fullPage
     { id: 16, nama: "Muliadi", wilayah: "RT 16", status: "Aktif" },
   ];
 
-  const displayedData = showAll ? dataRelawan : dataRelawan.slice(0, 4);
+  // --- DATA ORGANISASI LAIN (Diperbarui dengan data Ibu Zuherawati) ---
+  const dataOrganisasi = [
+    { 
+        id: 1, 
+        nama: "ZUHERAWATI", 
+        // Menggunakan placeholder image, Bapak bisa ganti URL ini dengan foto Ibu Zuherawati
+        imgUrl: "public/foto/Zuherawati.png", 
+        status: "Aktif",
+        jabatan: [
+            "Pengurus Wirid Akbar Kecamatan Percut Sei Tuan",
+            "Sekretaris Wirid Akbar Desa Sei Rotan",
+            "Sekretaris Perwiritan Nurul Huda Dusun 7 & 8 Sei Rotan",
+            "Pengurus Anak Yatim Piatu Dusun 7 Sei Rotan",
+            "Ketua Pokja 1 Desa Sei Rotan",
+            "Kader Posyandu Dsn 7 Sei Rotan",
+        ] 
+    },
+    // Jika ada tokoh lain dengan banyak peran, bisa ditambahkan di sini
+  ];
+
+  const displayedRt = showAll ? dataRt : dataRt.slice(0, 4);
+
+  const getTabClass = (tabName) => (
+    `py-2 px-6 font-bold text-lg rounded-full transition-all duration-300 ${
+      activeTab === tabName 
+        ? 'bg-blue-600 text-white shadow-lg shadow-blue-300/50' 
+        : 'text-slate-600 hover:bg-white/50'
+    }`
+  );
 
   return (
     // Jika fullPage, beri padding atas yang lebih besar (pt-28)
@@ -36,60 +65,129 @@ export default function RtDusunVII({ fullPage }) { // Tambahkan prop fullPage
             <Building2 size={16} /> Struktur Pemerintahan
           </div>
           <h2 className="text-4xl font-bold text-slate-900">Perangkat Dusun VII</h2>
-          <p className="mt-3 text-slate-600 font-medium">Struktur Rukun Tetangga (RT) yang melayani warga.</p>
+          <p className="mt-3 text-slate-600 font-medium">Struktur Rukun Tetangga (RT) dan Organisasi Dusun yang melayani warga.</p>
         </div>
 
+        {/* GAMBAR STRUKTUR RT (Tetap di atas) */}
         <div className="relative w-full max-w-5xl mx-auto h-64 md:h-96 rounded-3xl overflow-hidden shadow-2xl mb-16 group border-4 border-white/50 backdrop-blur-sm">
             <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-transparent to-transparent z-10"></div>
-            <div className="absolute bottom-0 left-0 p-4 md:p-8 z-20 text-white"> {/* Padding di Mobile dikecilkan */}
-                <h3 className="text-xl md:text-3xl font-bold mb-1 md:mb-2">Sinergi Membangun Desa</h3> {/* Ukuran teks dikecilkan di mobile */}
-                <p className="text-xs md:text-base text-blue-100 max-w-xl"> {/* Ukuran teks dikecilkan di mobile */}
-                    Bersama 16 Ketua RT yang solid menjaga kerukunan dan keamanan lingkungan Dusun VII Desa Sei Rotan.
+            <div className="absolute bottom-0 left-0 p-4 md:p-8 z-20 text-white"> 
+                <h3 className="text-xl md:text-3xl font-bold mb-1 md:mb-2">Sinergi Membangun Desa</h3> 
+                <p className="text-xs md:text-base text-blue-100 max-w-xl"> 
+                    Bersama seluruh perangkat desa yang solid menjaga kerukunan dan keamanan lingkungan Dusun VII Desa Sei Rotan.
                 </p>
             </div>
+            {/* object-contain agar foto utuh tidak terpotong */}
             <img 
                 src="/Rt.png" 
                 alt="Foto Struktur RT" 
-                className="w-full h-full object-contain bg-white transform transition duration-700 group-hover:scale-105"
+                className="w-full h-full object-contain bg-white transition duration-700 group-hover:scale-105"
             />
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {displayedData.map((tokoh) => (
-                <div key={tokoh.id} className="bg-white/70 backdrop-blur-md p-6 rounded-xl border border-white/50 shadow-sm hover:shadow-xl hover:border-blue-400 transition-all duration-300 group relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-16 h-16 bg-blue-50/50 rounded-bl-full -mr-4 -mt-4 transition-colors group-hover:bg-blue-100"></div>
-                    
-                    <div className="flex items-start justify-between mb-4 relative z-10">
-                        <div className="p-3 bg-white rounded-lg text-slate-600 group-hover:bg-blue-600 group-hover:text-white transition-colors shadow-sm">
-                            <Users size={24} />
-                        </div>
-                        <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-green-50/80 text-green-700 px-2 py-1 rounded-full border border-green-100">
-                            <CheckCircle2 size={10} /> {tokoh.status}
-                        </span>
-                    </div>
+        {/* --- TAB NAVIGATION --- */}
+        <div className="flex justify-center mb-12">
+            <div className="bg-white/70 backdrop-blur-md p-2 rounded-full shadow-lg flex space-x-2">
+                <button 
+                    onClick={() => { setActiveTab('rt'); setShowAll(false); }}
+                    className={getTabClass('rt')}
+                >
+                    <Users size={20} className="inline mr-2" /> Ketua RT
+                </button>
+                <button 
+                    onClick={() => { setActiveTab('organisasi'); setShowAll(false); }}
+                    className={getTabClass('organisasi')}
+                >
+                    <Heart size={20} className="inline mr-2" /> Organisasi Dusun
+                </button>
+            </div>
+        </div>
 
-                    <div className="relative z-10">
-                        <h4 className="text-lg font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
-                            {tokoh.nama}
-                        </h4>
-                        <div className="flex items-center gap-2 mt-1 text-slate-600 text-sm font-medium">
-                            <MapPin size={14} className="text-blue-500" />
-                            <span>Ketua {tokoh.wilayah}</span>
+        {/* --- KONTEN TAB: KETUA RT --- */}
+        {activeTab === 'rt' && (
+            <>
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {displayedRt.map((tokoh) => (
+                        <div key={tokoh.id} className="bg-white/70 backdrop-blur-md p-6 rounded-xl border border-white/50 shadow-sm hover:shadow-xl hover:border-blue-400 transition-all duration-300 group relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-16 h-16 bg-blue-50/50 rounded-bl-full -mr-4 -mt-4 transition-colors group-hover:bg-blue-100"></div>
+                            
+                            <div className="flex items-start justify-between mb-4 relative z-10">
+                                <div className="p-3 bg-white rounded-lg text-slate-600 group-hover:bg-blue-600 group-hover:text-white transition-colors shadow-sm">
+                                    <Users size={24} />
+                                </div>
+                                <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-green-50/80 text-green-700 px-2 py-1 rounded-full border border-green-100">
+                                    <CheckCircle2 size={10} /> {tokoh.status}
+                                </span>
+                            </div>
+
+                            <div className="relative z-10">
+                                <h4 className="text-lg font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
+                                    {tokoh.nama}
+                                </h4>
+                                <div className="flex items-center gap-2 mt-1 text-slate-600 text-sm font-medium">
+                                    <MapPin size={14} className="text-blue-500" />
+                                    <span>Ketua {tokoh.wilayah}</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    ))}
                 </div>
-            ))}
-        </div>
 
-        <div className="mt-12 text-center">
-            <button onClick={() => setShowAll(!showAll)} className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 border-2 border-slate-200 text-slate-700 rounded-full font-bold hover:border-blue-600 hover:text-blue-600 transition-all shadow-sm hover:shadow-md backdrop-blur-sm">
-                {showAll ? (
-                    <>Tutup Daftar <ChevronDown size={18} className="rotate-180" /></>
-                ) : (
-                    <>Lihat Seluruh 16 RT <ChevronDown size={18} /></>
-                )}
-            </button>
-        </div>
+                <div className="mt-12 text-center">
+                    <button onClick={() => setShowAll(!showAll)} className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 border-2 border-slate-200 text-slate-700 rounded-full font-bold hover:border-blue-600 hover:text-blue-600 transition-all shadow-sm hover:shadow-md backdrop-blur-sm">
+                        {showAll ? (
+                            <>Tutup Daftar <ChevronDown size={18} className="rotate-180" /></>
+                        ) : (
+                            <>Lihat Seluruh 16 RT <ChevronDown size={18} /></>
+                        )}
+                    </button>
+                </div>
+            </>
+        )}
+
+        {/* --- KONTEN TAB: ORGANISASI LAIN (Menggunakan desain card profil baru) --- */}
+        {activeTab === 'organisasi' && (
+            <>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {dataOrganisasi.map((org) => (
+                        <div key={org.id} className="bg-white rounded-2xl border border-slate-100 shadow-xl transition-all duration-300 p-8">
+                            
+                            {/* Header Card (Foto dan Nama) */}
+                            <div className="flex items-center mb-6 border-b pb-4 border-slate-100">
+                                <img 
+                                    src={org.imgUrl} 
+                                    alt={`Foto ${org.nama}`} 
+                                    className="w-16 h-16 object-cover rounded-full border-4 border-blue-100 mr-4"
+                                    onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/80x80/60A5FA/ffffff?text=Z"; }} // Fallback jika gambar tidak ditemukan
+                                />
+                                <div>
+                                    <h4 className="text-2xl font-extrabold text-blue-700">
+                                        {org.nama}
+                                    </h4>
+                                    <span className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider bg-green-50/80 text-green-700 px-2 py-0.5 mt-1 rounded-full border border-green-100 w-fit">
+                                        <CheckCircle2 size={10} /> {org.status}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            {/* Daftar Jabatan */}
+                            <h5 className="flex items-center text-sm font-bold text-slate-600 mb-3">
+                                <Briefcase size={16} className="mr-2 text-pink-500" /> Daftar Peran & Tanggung Jawab:
+                            </h5>
+                            <ul className="space-y-3 text-slate-700 text-sm">
+                                {org.jabatan.map((peran, index) => (
+                                    <li key={index} className="flex items-start">
+                                        <Heart size={14} className="flex-shrink-0 mt-1 mr-3 text-pink-500" />
+                                        <span>{peran}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+                
+            </>
+        )}
 
       </div>
     </section>

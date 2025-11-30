@@ -64,12 +64,12 @@ export default function Navbar({ personalInfo, navigateTo, currentPage }) {
               Beranda
             </button>
             
-            {/* Tombol Daftar RT (Pindah Halaman) */}
+            {/* Tombol Perangkat Dusun (Sebelumnya Daftar RT) */}
             <button 
               onClick={() => handleNavClick('rt_list')}
               className={`font-medium transition hover:text-blue-600 ${currentPage === 'rt_list' ? 'text-blue-600 font-bold' : 'text-gray-600'}`}
             >
-              Daftar RT
+              Perangkat Dusun
             </button>
             
             {/* Tombol Visi Misi (Pindah Halaman Baru) */}
@@ -123,7 +123,7 @@ export default function Navbar({ personalInfo, navigateTo, currentPage }) {
         <div className="md:hidden bg-white border-t border-slate-100 shadow-xl absolute w-full">
           <div className="px-4 pt-2 pb-6 space-y-2">
             <button onClick={() => handleNavClick('home')} className="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600">Beranda</button>
-            <button onClick={() => handleNavClick('rt_list')} className="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600">Daftar RT</button>
+            <button onClick={() => handleNavClick('rt_list')} className="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600">Perangkat Dusun</button>
             <button onClick={() => handleNavClick('about_page')} className="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600">Visi & Misi</button>
             <button onClick={() => handleNavClick('activity_page')} className="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600">Dokumentasi</button>
             
