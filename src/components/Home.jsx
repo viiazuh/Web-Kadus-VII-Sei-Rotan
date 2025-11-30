@@ -1,153 +1,226 @@
-import React from 'react';
-import { Star } from 'lucide-react';
+import React, { useState } from 'react';
+import { CheckCircle2, ChevronDown, Users, Building2, MapPin, Group, Heart, Briefcase, ExternalLink, Activity } from 'lucide-react';
 
-export default function Home({ personalInfo }) {
+export default function RtDusunVII({ fullPage }) { 
+  const [showAll, setShowAll] = useState(false);
+  const [activeTab, setActiveTab] = useState('rt'); // State untuk tab aktif
+
+  // --- DATA KETUA RT ---
+  const dataRt = [
+    { id: 1, nama: "Jumangin", wilayah: "RT 01", status: "Aktif" },
+    { id: 2, nama: "Sunarto", wilayah: "RT 02", status: "Aktif" },
+    { id: 3, nama: "Sudarmono", wilayah: "RT 03", status: "Aktif" },
+    { id: 4, nama: "Sugianto", wilayah: "RT 04", status: "Aktif" },
+    { id: 5, nama: "Sukiran", wilayah: "RT 05", status: "Aktif" },
+    { id: 6, nama: "Wagiono", wilayah: "RT 06", status: "Aktif" },
+    { id: 7, nama: "Gunawan", wilayah: "RT 07", status: "Aktif" },
+    { id: 8, nama: "Muhammad Taufik", wilayah: "RT 08", status: "Aktif" },
+    { id: 9, nama: "Mulyadi", wilayah: "RT 09", status: "Aktif" },
+    { id: 10, nama: "Supriandi", wilayah: "RT 10", status: "Aktif" },
+    { id: 11, nama: "Bambang Irawan", wilayah: "RT 11", status: "Aktif" },
+    { id: 12, nama: "Sugiman", wilayah: "RT 12", status: "Aktif" },
+    { id: 13, nama: "Rudi", wilayah: "RT 13", status: "Aktif" },
+    { id: 14, nama: "Misdi", wilayah: "RT 14", status: "Aktif" },
+    { id: 15, nama: "Deni Syahputra", wilayah: "RT 15", status: "Aktif" },
+    { id: 16, nama: "Muliadi", wilayah: "RT 16", status: "Aktif" },
+  ];
+
+  // --- DATA ORGANISASI LAIN (Diperbarui dengan data Ibu Zuherawati) ---
+  const dataOrganisasi = [
+    { 
+        id: 1, 
+        nama: "ZUHERAWATI", 
+        // PERBAIKAN PATH: Menggunakan semua huruf kecil dan ekstensi .png
+        imgUrl: "/foto/zuherawati.png", 
+        status: "Aktif",
+        jabatan: [
+            "Pengurus Wirid Akbar Kecamatan Percut Sei Tuan",
+            "Sekretaris Wirid Akbar Desa Sei Rotan",
+            "Sekretaris Perwiritan Nurul Huda Dusun 7 & 8 Sei Rotan",
+            "Pengurus Anak Yatim Piatu Dusun 7 Sei Rotan",
+            "Ketua Pokja 1 Desa Sei Rotan",
+            "Kader Posyandu Dsn 7 Sei Rotan",
+        ] 
+    },
+    // Jika ada tokoh lain dengan banyak peran, bisa ditambahkan di sini
+  ];
+
+  const displayedRt = showAll ? dataRt : dataRt.slice(0, 4);
+
+  const getTabClass = (tabName) => (
+    `py-2 px-6 font-bold text-lg rounded-full transition-all duration-300 ${
+      activeTab === tabName 
+        ? 'bg-blue-600 text-white shadow-lg shadow-blue-300/50' 
+        : 'text-slate-600 hover:bg-white/50'
+    }`
+  );
+
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 pb-10 overflow-hidden">
-      
-      {/* --- CSS ANIMASI KUSTOM --- */}
-      <style>{`
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(40px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes float-img {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(1deg); }
-        }
-        @keyframes scroll-bounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(10px); }
-        }
-        @keyframes gradient-x {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
+    // Jika fullPage, beri padding atas yang lebih besar (pt-28)
+    <section id="rtdusun" className={`py-24 bg-white/30 backdrop-blur-sm relative ${fullPage ? 'pt-28 min-h-screen' : ''}`}>
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
         
-        .animate-blob { animation: blob 10s infinite; }
-        .animate-float-img { animation: float-img 6s ease-in-out infinite; }
-        .animate-scroll { animation: scroll-bounce 2s infinite; }
-        .animate-fade-up { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
-        .animate-gradient-text {
-          background-size: 200% 200%;
-          animation: gradient-x 5s ease infinite;
-        }
-        
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.3s; }
-        .delay-300 { animation-delay: 0.5s; }
-        .delay-500 { animation-delay: 0.7s; }
-      `}</style>
-
-      {/* --- BACKGROUND DYNAMIC SHAPES --- */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
-        {/* Blob 1 */}
-        <div className="absolute top-0 left-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        {/* Blob 2 */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-        {/* Blob 3 */}
-        <div className="absolute -bottom-32 left-20 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
-        {/* Pattern Grid Overlay (Dihapus agar bersih) */}
-        {/* <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div> */}
-      </div>
-
-      <div className="container max-w-7xl mx-auto px-6 relative z-10">
-        <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-20">
-          
-          {/* --- KOLOM TEKS --- */}
-          <div className="w-full lg:w-1/2 text-center lg:text-left">
-            
-            {/* Badge */}
-            <div className="animate-fade-up inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-md border border-white shadow-sm mb-6">
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
-              </span>
-              <span className="text-sm font-semibold text-slate-600 tracking-wide uppercase">Website Resmi Dusun</span>
-            </div>
-
-            {/* Nama */}
-            <h1 className="animate-fade-up delay-100 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight mb-4">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-500 animate-gradient-text">
-                Lilik Suheri,
-              </span>
-              <br />
-              <span className="text-slate-800 text-4xl sm:text-6xl md:text-7xl">S.Pd.</span>
-            </h1>
-
-            {/* Jabatan */}
-            <h2 className="animate-fade-up delay-200 text-2xl md:text-3xl text-slate-500 font-medium mb-6">
-              {personalInfo.role}
-            </h2>
-            
-            {/* Paragraf */}
-            <p className="animate-fade-up delay-300 text-lg text-slate-600 leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8">
-              Membangun desa dengan hati, transparansi, dan gotong royong untuk kemajuan bersama Dusun VII.
-            </p>
-
-            {/* Statistik BARU */}
-            <div className="animate-fade-up delay-500 flex flex-wrap justify-center lg:justify-start gap-y-4 gap-x-8 border-t border-slate-200 pt-8">
-                {/* 1. RT Aktif */}
-                <div className="w-1/3 sm:w-auto">
-                    <p className="text-3xl font-bold text-slate-800">16</p>
-                    <p className="text-sm text-slate-500 uppercase tracking-wider">RT Aktif</p>
-                </div>
-                
-                {/* Garis pemisah hanya di desktop */}
-                <div className="hidden lg:block w-px h-10 bg-slate-200"></div>
-
-                {/* 2. KK Terdaftar (BARU) */}
-                <div className="w-1/3 sm:w-auto">
-                    <p className="text-3xl font-bold text-slate-800">800+</p>
-                    <p className="text-sm text-slate-500 uppercase tracking-wider">Kepala Keluarga</p>
-                </div>
-
-                {/* Garis pemisah hanya di desktop */}
-                <div className="hidden lg:block w-px h-10 bg-slate-200"></div>
-                
-                {/* 3. Layanan */}
-                <div className="w-1/3 sm:w-auto">
-                    <p className="text-3xl font-bold text-slate-800">24/7</p>
-                    <p className="text-sm text-slate-500 uppercase tracking-wider">Layanan</p>
-                </div>
-            </div>
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-100/80 text-blue-700 rounded-full text-sm font-bold mb-4 shadow-sm backdrop-blur-sm">
+            <Building2 size={16} /> Struktur Pemerintahan
           </div>
+          <h2 className="text-4xl font-bold text-slate-900">Perangkat Dusun VII</h2>
+          <p className="mt-3 text-slate-600 font-medium">Struktur Rukun Tetangga (RT) dan Organisasi Dusun yang melayani warga.</p>
+        </div>
 
-          {/* --- KOLOM FOTO --- */}
-          <div className="w-full lg:w-1/2 flex justify-center relative animate-fade-up delay-200">
-            {/* Elemen Dekoratif Belakang */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-cyan-400 rounded-[2rem] rotate-6 scale-95 blur-2xl opacity-20 animate-pulse"></div>
-            
-            {/* Bingkai Foto */}
-            <div className="relative w-72 h-96 md:w-96 md:h-[32rem] rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white bg-white animate-float-img group">
-                
-                <img 
-                    src="/maslilik.jpg" 
-                    alt="H. Lilik Suheri" 
-                    className="relative z-10 w-full h-full object-cover transition-transform duration-700 hover:scale-110"
-                />
-                
+        {/* GAMBAR STRUKTUR RT (Tetap di atas) */}
+        <div className="relative w-full max-w-5xl mx-auto h-64 md:h-96 rounded-3xl overflow-hidden shadow-2xl mb-16 group border-4 border-white/50 backdrop-blur-sm">
+            <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-transparent to-transparent z-10"></div>
+            <div className="absolute bottom-0 left-0 p-4 md:p-8 z-20 text-white"> 
+                <h3 className="text-xl md:text-3xl font-bold mb-1 md:mb-2">Sinergi Membangun Desa</h3> 
+                <p className="text-xs md:text-base text-blue-100 max-w-xl"> 
+                    Bersama seluruh perangkat desa yang solid menjaga kerukunan dan keamanan lingkungan Dusun VII Desa Sei Rotan.
+                </p>
             </div>
-          </div>
-
+            {/* object-contain agar foto utuh tidak terpotong */}
+            <img 
+                src="/Rt.png" 
+                alt="Foto Struktur RT" 
+                className="w-full h-full object-contain bg-white transition duration-700 group-hover:scale-105"
+                onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/960x400/CCCCCC/333333?text=Foto+Struktur+Tidak+Ditemukan"; }}
+            />
         </div>
-      </div>
 
-      {/* --- SCROLL INDICATOR --- */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center animate-fade-up delay-500">
-        <span className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-widest">Scroll Kebawah</span>
-        <div className="w-6 h-10 border-2 border-slate-300 rounded-full flex justify-center p-1">
-            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-scroll"></div>
+        {/* --- TAB NAVIGATION --- */}
+        <div className="flex justify-center mb-12">
+            <div className="bg-white/70 backdrop-blur-md p-2 rounded-full shadow-lg flex space-x-2">
+                <button 
+                    onClick={() => { setActiveTab('rt'); setShowAll(false); }}
+                    className={getTabClass('rt')}
+                >
+                    <Users size={20} className="inline mr-2" /> Ketua RT
+                </button>
+                <button 
+                    onClick={() => { setActiveTab('organisasi'); setShowAll(false); }}
+                    className={getTabClass('organisasi')}
+                >
+                    <Heart size={20} className="inline mr-2" /> Organisasi Dusun
+                </button>
+            </div>
         </div>
-      </div>
 
+        {/* --- KONTEN TAB: KETUA RT --- */}
+        {activeTab === 'rt' && (
+            <>
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {displayedRt.map((tokoh) => (
+                        <div key={tokoh.id} className="bg-white/70 backdrop-blur-md p-6 rounded-xl border border-white/50 shadow-sm hover:shadow-xl hover:border-blue-400 transition-all duration-300 group relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-16 h-16 bg-blue-50/50 rounded-bl-full -mr-4 -mt-4 transition-colors group-hover:bg-blue-100"></div>
+                            
+                            <div className="flex items-start justify-between mb-4 relative z-10">
+                                <div className="p-3 bg-white rounded-lg text-slate-600 group-hover:bg-blue-600 group-hover:text-white transition-colors shadow-sm">
+                                    <Users size={24} />
+                                </div>
+                                <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-green-50/80 text-green-700 px-2 py-1 rounded-full border border-green-100">
+                                    <CheckCircle2 size={10} /> {tokoh.status}
+                                </span>
+                            </div>
+
+                            <div className="relative z-10">
+                                <h4 className="text-lg font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
+                                    {tokoh.nama}
+                                </h4>
+                                <div className="flex items-center gap-2 mt-1 text-slate-600 text-sm font-medium">
+                                    <MapPin size={14} className="text-blue-500" />
+                                    <span>Ketua {tokoh.wilayah}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="mt-12 text-center">
+                    <button onClick={() => setShowAll(!showAll)} className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 border-2 border-slate-200 text-slate-700 rounded-full font-bold hover:border-blue-600 hover:text-blue-600 transition-all shadow-sm hover:shadow-md backdrop-blur-sm">
+                        {showAll ? (
+                            <>Tutup Daftar <ChevronDown size={18} className="rotate-180" /></>
+                        ) : (
+                            <>Lihat Seluruh 16 RT <ChevronDown size={18} /></>
+                        )}
+                    </button>
+                </div>
+            </>
+        )}
+
+        {/* --- KONTEN TAB: ORGANISASI LAIN (Menggunakan desain card profil baru) --- */}
+        {activeTab === 'organisasi' && (
+            <>
+                <div className="grid justify-center md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {dataOrganisasi.map((org) => (
+                        <div key={org.id} className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-100 shadow-xl transition-all duration-300 p-8 w-full max-w-sm">
+                            
+                            {/* Header Card Mirip UI Referensi */}
+                            <div className="flex items-center justify-between mb-6 border-b pb-4 border-slate-100">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-1 h-8 bg-blue-600 rounded-full"></div>
+                                    <h4 className="text-xl font-bold text-slate-900">Profil Organisasi</h4>
+                                </div>
+                                <button className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1">
+                                    Detail <ExternalLink size={14} />
+                                </button>
+                            </div>
+
+                            {/* FOTO TENGAH */}
+                            <div className="flex justify-center flex-col items-center mb-6">
+                                <img 
+                                    src={org.imgUrl} 
+                                    alt={`Foto ${org.nama}`} 
+                                    // Style meniru pas foto: border putih tebal, shadow, dan rounded kecil
+                                    className="w-24 h-32 object-cover rounded-lg border-4 border-white shadow-md mb-4"
+                                    // Fallback: Jika gagal dimuat, tampilkan placeholder dengan inisial Z
+                                    onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/96x128/60A5FA/ffffff?text=Z"; }} 
+                                />
+                                <h4 className="text-lg font-extrabold text-slate-900 mt-2">
+                                    {org.nama}
+                                </h4>
+                                <span className="text-sm font-medium text-slate-500">
+                                    Tokoh Penggerak Dusun
+                                </span>
+                            </div>
+                            
+                            {/* Daftar Status & Peran (Mirip Pembayaran Aktif) */}
+                            <div className="grid grid-cols-2 gap-4 border-t border-slate-200 pt-4">
+                                <div className="flex flex-col items-center">
+                                    <CheckCircle2 size={24} className="text-green-500 mb-1" />
+                                    <p className="text-xs font-bold text-slate-800 uppercase">Status</p>
+                                    <span className="text-sm font-medium text-green-600">Aktif</span>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                    <Activity size={24} className="text-yellow-500 mb-1" />
+                                    <p className="text-xs font-bold text-slate-800 uppercase">Peran</p>
+                                    <span className="text-sm font-medium text-yellow-600">{org.jabatan.length} Tugas</span>
+                                </div>
+                            </div>
+
+                            {/* Daftar Tugas/Jabatan Detail (List) */}
+                            <h5 className="flex items-center text-sm font-bold text-slate-600 mb-3 mt-6 border-t pt-4">
+                                <Briefcase size={16} className="mr-2 text-pink-500" /> Daftar Tanggung Jawab:
+                            </h5>
+                            <ul className="space-y-3 text-slate-700 text-sm max-h-48 overflow-y-auto pr-2">
+                                {org.jabatan.map((peran, index) => (
+                                    <li key={index} className="flex items-start">
+                                        <Heart size={14} className="flex-shrink-0 mt-1 mr-3 text-pink-500" />
+                                        <span>{peran}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+                
+                <div className="mt-12 text-center p-6 bg-white/50 rounded-2xl border border-dashed border-slate-200">
+                    <p className="text-slate-600">
+                        <Group size={16} className="inline mr-1 text-pink-500" /> Tokoh lain yang menjabat di berbagai organisasi Dusun dapat ditambahkan di sini.
+                    </p>
+                </div>
+            </>
+        )}
+
+      </div>
     </section>
   );
 }
