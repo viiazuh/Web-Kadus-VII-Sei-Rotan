@@ -78,10 +78,10 @@ export default function RtDusunVII({ fullPage }) {
         status: "Aktif",
         jabatan: [
             "Sekretaris Pokja 1",
+            "Sekretaris SPM  Posyandu Kemuning Dusun 7 Sei Rotan",
             "Kader Posyandu Dsn 7 Sei Rotan",
             "Wakil ketua Pengajian  Muslimat NU PAC Desa Sei Rotan",
             "Bendahara BUMDES SEROJA",
-            "Sekretaris SPM  Posyandu Kemuning Dusun 7 Sei Rotan",
             "Bendahara BKR",
             "TPK",
         ] 
@@ -106,6 +106,24 @@ export default function RtDusunVII({ fullPage }) {
             "Pokja 1",
             "Kader SPM",
             "Kader Posyandu Dsn 7 Sei Rotan",
+        ] 
+    },
+    { 
+        id: 5, 
+        nama: "Suriyani", 
+        imgUrl: "/fotom/suryani.png", 
+        status: "Aktif",
+        jabatan: [
+            "Kader SPM dusun 7 Sri rotan",
+        ] 
+    },
+    { 
+        id: 6, 
+        nama: "Yuni warianti", 
+        imgUrl: "/fotom/yuni.png", 
+        status: "Aktif",
+        jabatan: [
+            "Kader SPM dusun 7 Sri rotan",
         ] 
     },
   ];
