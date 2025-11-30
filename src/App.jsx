@@ -9,7 +9,7 @@ import ActivityGallery from './components/ActivityGallery';
 import AboutSection from './components/AboutSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Building2 } from 'lucide-react'; // Import Building2 untuk logo
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,8 +41,9 @@ export default function App() {
     return (
       <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white text-slate-800">
         <div className="text-center animate-pulse">
+          {/* PERUBAHAN 1: LOADING SCREEN */}
           <h1 className="text-3xl md:text-4xl font-bold mb-2">
-            Lilik<span className="text-blue-600">Suheri</span>
+            Dusun VII <span className="text-blue-600">Sei Rotan</span>
           </h1>
           <p className="text-slate-500 text-sm tracking-widest uppercase mb-6">
             Website Resmi
@@ -92,8 +93,6 @@ export default function App() {
         <>
           <Home personalInfo={personalInfo} /> 
           <InfoSection />
-          <AboutSection /> 
-          {/* ActivityGallery & RtDusunVII dipindahkan ke halaman terpisah */}
         </>
       )}
 

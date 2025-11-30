@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, MessageCircle } from 'lucide-react';
+import { Menu, X, MessageCircle, Building2 } from 'lucide-react';
 
 export default function Navbar({ personalInfo, navigateTo, currentPage }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,9 +47,10 @@ export default function Navbar({ personalInfo, navigateTo, currentPage }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            {/* Logo / Home Button */}
-            <button onClick={() => navigateTo('home')} className={`text-2xl font-bold ${navBgClass.includes('bg-white') ? 'text-slate-900' : 'text-slate-900'}`}>
-              Lilik<span className="text-blue-600">Suheri</span>
+            {/* PERUBAHAN 2: LOGO NAVBAR */}
+            <button onClick={() => navigateTo('home')} className={`flex items-center gap-1 text-xl font-bold ${navBgClass.includes('bg-white') ? 'text-slate-900' : 'text-slate-900'}`}>
+              <Building2 size={24} className="text-blue-600 fill-blue-100" />
+              Dusun VII <span className="text-blue-600">Sei Rotan</span>
             </button>
           </div>
 

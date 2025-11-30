@@ -1,11 +1,41 @@
-import React, { useState } from 'react';
-import { CheckCircle2, ChevronDown, Users, Building2, MapPin, Group, Heart, Briefcase } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { CheckCircle2, ChevronDown, Users, Building2, MapPin, Group, Heart, Briefcase, ExternalLink, Activity } from 'lucide-react';
 
 export default function RtDusunVII({ fullPage }) { 
   const [showAll, setShowAll] = useState(false);
-  const [activeTab, setActiveTab] = useState('rt'); // State untuk tab aktif
+  const [activeTab, setActiveTab] = useState('rt');
+  
+  // --- DATA UNTUK SLIDER FOTO (CAROUSEL) ---
+  const carouselImages = [
+    { 
+        src: "/Rt.png", 
+        caption: "Sinergi Membangun Desa: Struktur Rukun Tetangga (RT)",
+        alt: "Foto Struktur RT" 
+    },
+    { 
+        // Menggunakan path Ibu Zuherawati sebagai perwakilan organisasi lain
+        src: "/fotom/posyandu.png", 
+        caption: "Penggerak Komunitas: Kader Posyandu & Organisasi Dusun",
+        alt: "Foto Organisasi Dusun" 
+    },
+    // Jika ada foto kegiatan lain, bisa ditambahkan di sini
+  ];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // --- DATA KETUA RT ---
+  // LOGIC OTOMATIS GANTI FOTO (SETIAP 5 DETIK)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex(prevIndex => 
+        (prevIndex + 1) % carouselImages.length
+      );
+    }, 5000); // Ganti setiap 5000 milidetik (5 detik)
+    
+    return () => clearInterval(interval);
+  }, []); // Dependensi kosong agar hanya berjalan sekali saat mount
+
+  const currentImage = carouselImages[currentImageIndex];
+
+  // --- DATA KETUA RT (TIDAK BERUBAH) ---
   const dataRt = [
     { id: 1, nama: "Jumangin", wilayah: "RT 01", status: "Aktif" },
     { id: 2, nama: "Sunarto", wilayah: "RT 02", status: "Aktif" },
@@ -25,13 +55,12 @@ export default function RtDusunVII({ fullPage }) {
     { id: 16, nama: "Muliadi", wilayah: "RT 16", status: "Aktif" },
   ];
 
-  // --- DATA ORGANISASI LAIN (Diperbarui dengan data Ibu Zuherawati) ---
+  // --- DATA ORGANISASI LAIN (Tidak Berubah) ---
   const dataOrganisasi = [
     { 
         id: 1, 
         nama: "ZUHERAWATI", 
-        // Menggunakan placeholder image, Bapak bisa ganti URL ini dengan foto Ibu Zuherawati
-        imgUrl: "/foto/zuherawati.png", 
+        imgUrl: "/fotom/zuherawati.png", 
         status: "Aktif",
         jabatan: [
             "Pengurus Wirid Akbar Kecamatan Percut Sei Tuan",
@@ -42,7 +71,20 @@ export default function RtDusunVII({ fullPage }) {
             "Kader Posyandu Dsn 7 Sei Rotan",
         ] 
     },
-    // Jika ada tokoh lain dengan banyak peran, bisa ditambahkan di sini
+    { 
+        id: 2, 
+        nama: "Suparni", 
+        imgUrl: "/fotom/suparni.png", 
+        status: "Aktif",
+        jabatan: [
+            "Sekretaris Pokja 1",
+            "Wakil ketua Pengajian  Muslimat NU PAC Desa Sei Rotan",
+            "Bendahara BUMDES SEROJA",
+            "Sekretaris SPM  Posyandu Kemuning Dusun 7 Sei Rotan",
+            "Kader Posyandu Dsn 7 Sei Rotan",
+            "Bendahara BKR",
+        ] 
+    },
   ];
 
   const displayedRt = showAll ? dataRt : dataRt.slice(0, 4);
@@ -68,24 +110,46 @@ export default function RtDusunVII({ fullPage }) {
           <p className="mt-3 text-slate-600 font-medium">Struktur Rukun Tetangga (RT) dan Organisasi Dusun yang melayani warga.</p>
         </div>
 
-        {/* GAMBAR STRUKTUR RT (Tetap di atas) */}
+        {/* --- GAMBAR SLIDER (CAROUSEL BARU) --- */}
         <div className="relative w-full max-w-5xl mx-auto h-64 md:h-96 rounded-3xl overflow-hidden shadow-2xl mb-16 group border-4 border-white/50 backdrop-blur-sm">
+            {/* Overlay Gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-transparent to-transparent z-10"></div>
-            <div className="absolute bottom-0 left-0 p-4 md:p-8 z-20 text-white"> 
-                <h3 className="text-xl md:text-3xl font-bold mb-1 md:mb-2">Sinergi Membangun Desa</h3> 
+            
+            {/* Teks Dinamis */}
+            <div className="absolute bottom-0 left-0 p-4 md:p-8 z-20 text-white transition-opacity duration-1000"> 
+                <h3 className="text-xl md:text-3xl font-bold mb-1 md:mb-2">{currentImage.caption}</h3> 
                 <p className="text-xs md:text-base text-blue-100 max-w-xl"> 
-                    Bersama seluruh perangkat desa yang solid menjaga kerukunan dan keamanan lingkungan Dusun VII Desa Sei Rotan.
+                    {currentImage.alt === "Foto Struktur RT" ? "Bersama seluruh perangkat desa yang solid menjaga kerukunan dan keamanan lingkungan Dusun VII Desa Sei Rotan." : "Dedikasi untuk layanan sosial, pendidikan, dan kesehatan warga."}
                 </p>
             </div>
-            {/* object-contain agar foto utuh tidak terpotong */}
+            
+            {/* Gambar yang Berganti */}
             <img 
-                src="/Rt.png" 
-                alt="Foto Struktur RT" 
-                className="w-full h-full object-contain bg-white transition duration-700 group-hover:scale-105"
+                key={currentImage.src} // Key untuk memicu transisi (meskipun sederhana)
+                src={currentImage.src} 
+                alt={currentImage.alt} 
+                className="w-full h-full object-contain bg-white transition duration-1000 animate-[fadeIn_1s_ease-out] group-hover:scale-105"
+                onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/960x400/CCCCCC/333333?text=Foto+Tidak+Ditemukan"; }}
             />
-        </div>
 
-        {/* --- TAB NAVIGATION --- */}
+            {/* Indikator Slider */}
+            <div className="absolute bottom-4 right-4 z-20 flex gap-2">
+                {carouselImages.map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={`w-3 h-3 rounded-full transition-colors ${
+                            index === currentImageIndex ? 'bg-white shadow-md' : 'bg-white/50 hover:bg-white/80'
+                        }`}
+                        aria-label={`Lihat gambar ${index + 1}`}
+                    ></button>
+                ))}
+            </div>
+        </div>
+        <style>{`@keyframes fadeIn {from {opacity: 0;} to {opacity: 1;}}`}</style>
+
+
+        {/* --- TAB NAVIGATION (Tidak Berubah) --- */}
         <div className="flex justify-center mb-12">
             <div className="bg-white/70 backdrop-blur-md p-2 rounded-full shadow-lg flex space-x-2">
                 <button 
@@ -103,7 +167,7 @@ export default function RtDusunVII({ fullPage }) {
             </div>
         </div>
 
-        {/* --- KONTEN TAB: KETUA RT --- */}
+        {/* --- KONTEN TAB: KETUA RT (Tidak Berubah) --- */}
         {activeTab === 'rt' && (
             <>
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -145,14 +209,14 @@ export default function RtDusunVII({ fullPage }) {
             </>
         )}
 
-        {/* --- KONTEN TAB: ORGANISASI LAIN (Menggunakan desain card profil baru) --- */}
+        {/* --- KONTEN TAB: ORGANISASI LAIN (Tidak Berubah) --- */}
         {activeTab === 'organisasi' && (
             <>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid justify-center lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     {dataOrganisasi.map((org) => (
-                        <div key={org.id} className="bg-white rounded-2xl border border-slate-100 shadow-xl transition-all duration-300 p-8">
+                        <div key={org.id} className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-100 shadow-xl transition-all duration-300 p-6">
                             
-                            {/* Header Card (Foto dan Nama) */}
+                            {/* HEADER FOTO KIRI & NAMA */}
                             <div className="flex items-center mb-6 border-b pb-4 border-slate-100">
                                 <img 
                                     src={org.imgUrl} 
@@ -174,7 +238,7 @@ export default function RtDusunVII({ fullPage }) {
                             <h5 className="flex items-center text-sm font-bold text-slate-600 mb-3">
                                 <Briefcase size={16} className="mr-2 text-pink-500" /> Daftar Peran & Tanggung Jawab:
                             </h5>
-                            <ul className="space-y-3 text-slate-700 text-sm">
+                            <ul className="space-y-3 text-slate-700 text-sm max-h-48 overflow-y-auto pr-2">
                                 {org.jabatan.map((peran, index) => (
                                     <li key={index} className="flex items-start">
                                         <Heart size={14} className="flex-shrink-0 mt-1 mr-3 text-pink-500" />
