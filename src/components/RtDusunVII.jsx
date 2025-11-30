@@ -63,12 +63,12 @@ export default function RtDusunVII({ fullPage }) {
         imgUrl: "/fotom/zuherawati.png", 
         status: "Aktif",
         jabatan: [
+            "Ketua Pokja 1 Desa Sei Rotan",
+            "Kader Posyandu Dsn 7 Sei Rotan",
             "Pengurus Wirid Akbar Kecamatan Percut Sei Tuan",
             "Sekretaris Wirid Akbar Desa Sei Rotan",
             "Sekretaris Perwiritan Nurul Huda Dusun 7 & 8 Sei Rotan",
             "Pengurus Anak Yatim Piatu Dusun 7 Sei Rotan",
-            "Ketua Pokja 1 Desa Sei Rotan",
-            "Kader Posyandu Dsn 7 Sei Rotan",
         ] 
     },
     { 
@@ -78,11 +78,34 @@ export default function RtDusunVII({ fullPage }) {
         status: "Aktif",
         jabatan: [
             "Sekretaris Pokja 1",
+            "Kader Posyandu Dsn 7 Sei Rotan",
             "Wakil ketua Pengajian  Muslimat NU PAC Desa Sei Rotan",
             "Bendahara BUMDES SEROJA",
             "Sekretaris SPM  Posyandu Kemuning Dusun 7 Sei Rotan",
-            "Kader Posyandu Dsn 7 Sei Rotan",
             "Bendahara BKR",
+            "TPK",
+        ] 
+    },
+    { 
+        id: 3, 
+        nama: "Mini Purwati ", 
+        imgUrl: "/fotom/purwati.png", 
+        status: "Aktif",
+        jabatan: [
+            "Pokja 1",
+            "Kader SPM",
+            "Kader Posyandu Dsn 7 Sei Rotan",
+        ] 
+    },
+    { 
+        id: 4, 
+        nama: "Siti Rahayu Hamidah  ", 
+        imgUrl: "/fotom/hamidah.png", 
+        status: "Aktif",
+        jabatan: [
+            "Pokja 1",
+            "Kader SPM",
+            "Kader Posyandu Dsn 7 Sei Rotan",
         ] 
     },
   ];
