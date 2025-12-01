@@ -1,7 +1,18 @@
 import React from 'react';
-import { Star } from 'lucide-react';
+import { Star, Lock, Unlock } from 'lucide-react';
 
-export default function Home({ personalInfo }) {
+// Menerima props isAdmin, onLoginRequired, dan onLogout
+export default function Home({ personalInfo, isAdmin, onLoginRequired, onLogout }) {
+  
+  // Fungsi yang dipanggil saat tombol float di kanan bawah diklik
+  const handleAdminClick = () => {
+    if (isAdmin) {
+      onLogout(); // Logout jika sudah login
+    } else {
+      onLoginRequired(); // Tampilkan modal login jika belum login
+    }
+  };
+
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 pb-10 overflow-hidden">
       
@@ -54,11 +65,23 @@ export default function Home({ personalInfo }) {
         <div className="absolute top-0 right-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
         {/* Blob 3 */}
         <div className="absolute -bottom-32 left-20 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
-        {/* Pattern Grid Overlay (Dihapus agar bersih) */}
-        {/* <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div> */}
+        {/* Pattern Grid Overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
       </div>
 
       <div className="container max-w-7xl mx-auto px-6 relative z-10">
+        
+        {/* --- TOMBOL FLOAT ADMIN (Pemicu Login) --- */}
+        <button 
+          onClick={handleAdminClick}
+          className={`fixed bottom-4 right-4 z-50 p-3 rounded-full shadow-lg transition-all duration-300 flex items-center gap-2 ${isAdmin ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
+          title={isAdmin ? "Klik untuk mematikan mode Admin" : "Klik untuk mengaktifkan mode Admin"}
+        >
+          {isAdmin ? <Lock size={20} /> : <Unlock size={20} />}
+          <span className="hidden md:inline">{isAdmin ? 'Matikan Admin' : 'Akses Admin'}</span>
+        </button>
+
+
         <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-20">
           
           {/* --- KOLOM TEKS --- */}
@@ -92,28 +115,23 @@ export default function Home({ personalInfo }) {
               Membangun desa dengan hati, transparansi, dan gotong royong untuk kemajuan bersama Dusun VII.
             </p>
 
-            {/* Statistik BARU */}
+            {/* Statistik */}
             <div className="animate-fade-up delay-500 flex flex-wrap justify-center lg:justify-start gap-y-4 gap-x-8 border-t border-slate-200 pt-8">
-                {/* 1. RT Aktif */}
-                <div className="w-1/3 sm:w-auto">
+                <div>
                     <p className="text-3xl font-bold text-slate-800">16</p>
                     <p className="text-sm text-slate-500 uppercase tracking-wider">RT Aktif</p>
                 </div>
                 
-                {/* Garis pemisah hanya di desktop */}
                 <div className="hidden lg:block w-px h-10 bg-slate-200"></div>
 
-                {/* 2. KK Terdaftar (BARU) */}
-                <div className="w-1/3 sm:w-auto">
-                    <p className="text-3xl font-bold text-slate-800">800+</p>
+                <div>
+                    <p className="text-3xl font-bold text-slate-800">820+</p>
                     <p className="text-sm text-slate-500 uppercase tracking-wider">Kepala Keluarga</p>
                 </div>
 
-                {/* Garis pemisah hanya di desktop */}
                 <div className="hidden lg:block w-px h-10 bg-slate-200"></div>
                 
-                {/* 3. Layanan */}
-                <div className="w-1/3 sm:w-auto">
+                <div>
                     <p className="text-3xl font-bold text-slate-800">24/7</p>
                     <p className="text-sm text-slate-500 uppercase tracking-wider">Layanan</p>
                 </div>
@@ -126,12 +144,13 @@ export default function Home({ personalInfo }) {
             <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-cyan-400 rounded-[2rem] rotate-6 scale-95 blur-2xl opacity-20 animate-pulse"></div>
             
             {/* Bingkai Foto */}
-            <div className="relative w-72 h-96 md:w-96 md:h-[32rem] rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white bg-white animate-float-img group">
+            <div className="relative w-72 h-96 md:w-96 md:h-[32rem] rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white bg-white animate-float-img">
                 
                 <img 
                     src="/maslilik.jpg" 
                     alt="H. Lilik Suheri" 
                     className="relative z-10 w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                    onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/384x512/CCCCCC/333333?text=Foto+Kadus+Tidak+Ditemukan"; }}
                 />
                 
             </div>
@@ -141,7 +160,7 @@ export default function Home({ personalInfo }) {
       </div>
 
       {/* --- SCROLL INDICATOR --- */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center animate-fade-up delay-500">
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center animate-fade-up delay-500">
         <span className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-widest">Scroll Kebawah</span>
         <div className="w-6 h-10 border-2 border-slate-300 rounded-full flex justify-center p-1">
             <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-scroll"></div>
