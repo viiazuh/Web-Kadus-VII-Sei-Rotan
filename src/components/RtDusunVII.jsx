@@ -137,6 +137,16 @@ export default function RtDusunVII({ fullPage }) {
             "Kader pustu",
         ] 
     },
+     { 
+        id: 8, 
+        nama: "RIKA TANJUNG ", 
+        imgUrl: "/fotom/rika.png", 
+        status: "Aktif",
+        jabatan: [
+            "Kader SPM",
+            "Dusun 7 sei rotan",
+        ] 
+    },
   ];
 
   const displayedRt = showAll ? dataRt : dataRt.slice(0, 4);
