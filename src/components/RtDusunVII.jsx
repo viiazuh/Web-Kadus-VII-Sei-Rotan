@@ -324,11 +324,6 @@ export default function RtDusunVII({ fullPage }) {
                     ))}
                 </div>
                 
-                <div className="mt-12 text-center p-6 bg-white/50 rounded-2xl border border-dashed border-slate-200">
-                    <p className="text-slate-600">
-                        <Group size={16} className="inline mr-1 text-pink-500" /> Tokoh lain yang menjabat di berbagai organisasi Dusun dapat ditambahkan di sini.
-                    </p>
-                </div>
             </>
         )}
 
