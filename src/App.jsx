@@ -9,18 +9,47 @@ import ActivityGallery from './components/ActivityGallery';
 import AboutSection from './components/AboutSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
-import { Loader2, Building2 } from 'lucide-react'; // Import Building2 untuk logo
+import PageDecorator from './ui/PageDecorator'; // <-- PATH SUDAH DIPERBAIKI: dari ./components/ ke ./ui/
+import { Loader2 } from 'lucide-react';
+
+// Fungsi untuk menentukan halaman awal dari URL
+const getPageFromPath = (path) => {
+  const pathName = path.replace('/', '');
+  if (pathName === 'rt_list' || pathName === 'about_page' || pathName === 'activity_page') {
+    return pathName;
+  }
+  return 'home'; // Default ke home jika path kosong atau tidak dikenal
+};
+
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  // Default halaman adalah 'home'
-  const [currentPage, setCurrentPage] = useState('home'); 
+  // Ambil halaman awal dari URL saat aplikasi dimuat
+  const [currentPage, setCurrentPage] = useState(getPageFromPath(window.location.pathname)); 
 
   // FUNGSI UNTUK PINDAH HALAMAN
   const navigateTo = (page) => {
+    // 1. Ubah state internal
     setCurrentPage(page);
-    window.scrollTo(0, 0); // Otomatis scroll ke atas saat pindah halaman
+    // 2. Catat di riwayat browser (History API)
+    window.history.pushState(null, '', `/${page}`);
+    // 3. Scroll ke atas
+    window.scrollTo(0, 0); 
   };
+
+  // --- EFFECT UNTUK MENDENGARKAN TOMBOL BACK/FORWARD BROWSER ---
+  useEffect(() => {
+    const handlePopState = () => {
+      // Saat tombol back/forward ditekan, ambil path baru dari URL
+      setCurrentPage(getPageFromPath(window.location.pathname));
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
 
   // DATA PRIBADI (Pusat Data)
   const personalInfo = {
@@ -41,7 +70,6 @@ export default function App() {
     return (
       <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white text-slate-800">
         <div className="text-center animate-pulse">
-          {/* PERUBAHAN 1: LOADING SCREEN */}
           <h1 className="text-3xl md:text-4xl font-bold mb-2">
             Dusun VII <span className="text-blue-600">Sei Rotan</span>
           </h1>
@@ -72,6 +100,10 @@ export default function App() {
         .animate-blob { animation: blob 10s infinite; }
         .animation-delay-2000 { animation-delay: 2s; }
         .animation-delay-4000 { animation-delay: 4s; }
+        @keyframes float { 
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
       `}</style>
 
       {/* --- GLOBAL BACKGROUND (WALLPAPER HIDUP - POLOS TANPA KOTAK) --- */}
@@ -83,6 +115,10 @@ export default function App() {
         {/* Blob 3 */}
         <div className="absolute -bottom-32 left-20 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
       </div>
+      
+      {/* --- DEKORASI PAGE BARU --- */}
+      {/* Muncul di semua halaman kecuali loading */}
+      {!isLoading && <PageDecorator />} 
 
       <Navbar personalInfo={personalInfo} navigateTo={navigateTo} currentPage={currentPage} />
       

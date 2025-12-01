@@ -3,19 +3,19 @@ import { CheckCircle2, ChevronDown, Users, Building2, MapPin, Group, Heart, Brie
 
 export default function RtDusunVII({ fullPage }) { 
   const [showAll, setShowAll] = useState(false);
-  const [activeTab, setActiveTab] = useState('rt');
-  
+  const [activeTab, setActiveTab] = useState('rt'); // State untuk tab aktif
+
   // --- DATA UNTUK SLIDER FOTO (CAROUSEL) ---
   const carouselImages = [
     { 
         src: "/Rt.png", 
-        caption: "Sinergi Membangun Desa: Struktur Rukun Tetangga (RT)",
+        caption: "Struktur Rukun Tetangga (RT)",
         alt: "Foto Struktur RT" 
     },
     { 
         // Menggunakan path Ibu Zuherawati sebagai perwakilan organisasi lain
         src: "/fotom/posyandu.png", 
-        caption: "Penggerak Komunitas: Kader Posyandu & Organisasi Dusun",
+        caption: "Penggerak Komunitas & Kader Posyandu",
         alt: "Foto Organisasi Dusun" 
     },
     // Jika ada foto kegiatan lain, bisa ditambahkan di sini
@@ -31,7 +31,7 @@ export default function RtDusunVII({ fullPage }) {
     }, 5000); // Ganti setiap 5000 milidetik (5 detik)
     
     return () => clearInterval(interval);
-  }, []); // Dependensi kosong agar hanya berjalan sekali saat mount
+  }, [carouselImages.length]); // Dependensi ditambahkan agar logic berjalan benar
 
   const currentImage = carouselImages[currentImageIndex];
 
@@ -55,7 +55,7 @@ export default function RtDusunVII({ fullPage }) {
     { id: 16, nama: "Muliadi", wilayah: "RT 16", status: "Aktif" },
   ];
 
-  // --- DATA ORGANISASI LAIN (Tidak Berubah) ---
+  // --- DATA ORGANISASI LAIN (Diperbarui dengan data Ibu Zuherawati) ---
   const dataOrganisasi = [
     { 
         id: 1, 
@@ -74,7 +74,7 @@ export default function RtDusunVII({ fullPage }) {
     },
     { 
         id: 2, 
-        nama: "Suparni", 
+        nama: "SUPARNI", 
         imgUrl: "/fotom/suparni.png", 
         status: "Aktif",
         jabatan: [
@@ -89,7 +89,7 @@ export default function RtDusunVII({ fullPage }) {
     },
     { 
         id: 3, 
-        nama: "Mini Purwati ", 
+        nama: "MINI PURWATI ", 
         imgUrl: "/fotom/purwati.png", 
         status: "Aktif",
         jabatan: [
@@ -100,7 +100,7 @@ export default function RtDusunVII({ fullPage }) {
     },
     { 
         id: 4, 
-        nama: "Siti Rahayu Hamidah  ", 
+        nama: "SITI RAHAYU HAMIDAH  ", 
         imgUrl: "/fotom/hamidah.png", 
         status: "Aktif",
         jabatan: [
@@ -111,7 +111,7 @@ export default function RtDusunVII({ fullPage }) {
     },
     { 
         id: 5, 
-        nama: "Suriyani", 
+        nama: "SURIYANI", 
         imgUrl: "/fotom/suryani.png", 
         status: "Aktif",
         jabatan: [
@@ -120,11 +120,21 @@ export default function RtDusunVII({ fullPage }) {
     },
     { 
         id: 6, 
-        nama: "Yuni warianti", 
+        nama: "YUNI WARIANTI", 
         imgUrl: "/fotom/yuni.png", 
         status: "Aktif",
         jabatan: [
             "Kader SPM dusun 7",
+        ] 
+    },
+    { 
+        id: 7, 
+        nama: "SHINTA AGUSTINA", 
+        imgUrl: "/fotom/shinta.png", 
+        status: "Aktif",
+        jabatan: [
+            "Kader posyandu",
+            "Kader pustu",
         ] 
     },
   ];
@@ -251,47 +261,74 @@ export default function RtDusunVII({ fullPage }) {
             </>
         )}
 
-        {/* --- KONTEN TAB: ORGANISASI LAIN (Tidak Berubah) --- */}
+        {/* --- KONTEN TAB: ORGANISASI LAIN (Desain Minimalis List Detail) --- */}
         {activeTab === 'organisasi' && (
             <>
-                <div className="grid justify-center lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                {/* Grid diperbaiki untuk 3-4 kolom di desktop */}
+                <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 justify-center"> 
                     {dataOrganisasi.map((org) => (
-                        <div key={org.id} className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-100 shadow-xl transition-all duration-300 p-6">
+                        // Kartu Organisasi (Minimalis dengan Foto Kiri)
+                        <div key={org.id} className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-100 shadow-xl transition-all duration-300 p-4">
                             
-                            {/* HEADER FOTO KIRI & NAMA */}
-                            <div className="flex items-center mb-6 border-b pb-4 border-slate-100">
-                                <img 
-                                    src={org.imgUrl} 
-                                    alt={`Foto ${org.nama}`} 
-                                    className="w-16 h-16 object-cover rounded-full border-4 border-blue-100 mr-4"
-                                    onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/80x80/60A5FA/ffffff?text=Z"; }} // Fallback jika gambar tidak ditemukan
-                                />
-                                <div>
-                                    <h4 className="text-2xl font-extrabold text-blue-700">
-                                        {org.nama}
-                                    </h4>
-                                    <span className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider bg-green-50/80 text-green-700 px-2 py-0.5 mt-1 rounded-full border border-green-100 w-fit">
-                                        <CheckCircle2 size={10} /> {org.status}
-                                    </span>
+                            {/* Baris Atas: Foto dan Nama */}
+                            <div className="flex items-start justify-between mb-4">
+                                <div className="flex items-start gap-4">
+                                    {/* FOTO (Lingkaran Penuh) */}
+                                    <img 
+                                        src={org.imgUrl} 
+                                        alt={`Foto ${org.nama}`} 
+                                        className="w-16 h-16 object-cover rounded-full border-2 border-blue-100 shadow-sm"
+                                        onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/64x64/E0F2FE/1D4ED8?text=${org.nama.charAt(0)}`; }} 
+                                    />
+                                    
+                                    {/* NAMA DAN STATUS */}
+                                    <div>
+                                        <h4 className="text-lg font-extrabold text-slate-900 leading-tight">
+                                            {org.nama}
+                                        </h4>
+                                        <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-green-50/80 text-green-700 px-2 py-0.5 mt-1 rounded-full border border-green-100 w-fit">
+                                            <CheckCircle2 size={10} /> {org.status}
+                                        </span>
+                                    </div>
                                 </div>
+
+                                {/* Tombol Detail (DIHILANGKAN) */}
+                                {/* <button className="text-blue-600 hover:text-blue-800 text-xs font-medium flex items-center gap-1 mt-1">
+                                    Detail <ExternalLink size={12} />
+                                </button> */}
                             </div>
                             
-                            {/* Daftar Jabatan */}
-                            <h5 className="flex items-center text-sm font-bold text-slate-600 mb-3">
-                                <Briefcase size={16} className="mr-2 text-pink-500" /> Daftar Peran & Tanggung Jawab:
-                            </h5>
-                            <ul className="space-y-3 text-slate-700 text-sm max-h-48 overflow-y-auto pr-2">
-                                {org.jabatan.map((peran, index) => (
-                                    <li key={index} className="flex items-start">
-                                        <Heart size={14} className="flex-shrink-0 mt-1 mr-3 text-pink-500" />
-                                        <span>{peran}</span>
-                                    </li>
-                                ))}
-                            </ul>
+                            {/* Daftar Tugas/Jabatan Detail (List) */}
+                            {org.jabatan.length > 0 && (
+                                <>
+                                    <h5 className="flex items-center text-sm font-bold text-slate-600 mb-2 mt-4 border-t pt-4">
+                                        <Briefcase size={16} className="mr-2 text-pink-500" /> Daftar Peran Tugas:
+                                    </h5>
+                                    {/* Max height dan scrollbar untuk list tugas yang panjang */}
+                                    <ul className="space-y-2 text-slate-700 text-sm max-h-32 overflow-y-auto pr-1">
+                                        {org.jabatan.slice(0, 5).map((peran, index) => (
+                                            <li key={index} className="flex items-start">
+                                                <Heart size={14} className="flex-shrink-0 mt-1 mr-3 text-pink-500" />
+                                                <span>{peran}</span>
+                                            </li>
+                                        ))}
+                                        {org.jabatan.length > 5 && (
+                                            <li className="text-xs text-slate-500 mt-2">
+                                                ... dan {org.jabatan.length - 5} peran lainnya
+                                            </li>
+                                        )}
+                                    </ul>
+                                </>
+                            )}
                         </div>
                     ))}
                 </div>
                 
+                <div className="mt-12 text-center p-6 bg-white/50 rounded-2xl border border-dashed border-slate-200">
+                    <p className="text-slate-600">
+                        <Group size={16} className="inline mr-1 text-pink-500" /> Tokoh lain yang menjabat di berbagai organisasi Dusun dapat ditambahkan di sini.
+                    </p>
+                </div>
             </>
         )}
 
