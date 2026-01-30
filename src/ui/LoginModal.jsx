@@ -1,34 +1,50 @@
 import React, { useState } from 'react';
-// Import Eye dan EyeOff dari lucide-react
-import { Lock, User, Key, X, LogIn, Loader2, Eye, EyeOff } from 'lucide-react';
+// Import icon
+import { Lock, User, Key, X, LogIn, Loader2, Eye, EyeOff, Mail } from 'lucide-react';
+// Import fitur Login dari Firebase
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../firebase'; // Pastikan path ini sesuai dengan file firebase.js kamu
 
 export default function LoginModal({ onClose, onSuccess }) {
-  const [username, setUsername] = useState('');
+  // Ganti Username jadi Email
+  const [email, setEmail] = useState(''); 
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isAuthenticating, setIsAuthenticating] = useState(false);
-  
-  // STATE BARU: Untuk mengatur tampil/sembunyi password
   const [showPassword, setShowPassword] = useState(false);
 
-  // KREDENSIAL ADMIN
-  const ADMIN_USER = 'kadus7';
-  const ADMIN_PASS = 'lilikSuheri7';
+  // KREDENSIAL LAMA DIHAPUS (Tidak pakai kadus7 lagi)
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     setIsAuthenticating(true);
 
-    // Simulasi penundaan jaringan/server
-    setTimeout(() => {
-        if (username === ADMIN_USER && password === ADMIN_PASS) {
-            onSuccess(); 
-        } else {
-            setError('Username atau Password salah. Silakan coba lagi.');
-        }
-        setIsAuthenticating(false);
-    }, 800);
+    try {
+      // INI KUNCI KEAMANANNYA: 
+      // Kita suruh Firebase mengecek ke server Google
+      await signInWithEmailAndPassword(auth, email, password);
+      
+      // Kalau berhasil (tidak error), jalankan onSuccess
+      onSuccess(); 
+      
+      // Opsional: Tutup modal otomatis kalau perlu, tapi biasanya diatur di App.jsx
+    } catch (err) {
+      console.error("Login Gagal:", err);
+      
+      // Handle Error supaya pesan lebih manusiawi
+      if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+        setError('Email atau Password salah!');
+      } else if (err.code === 'auth/too-many-requests') {
+        setError('Terlalu banyak mencoba. Tunggu sebentar.');
+      } else if (err.code === 'auth/invalid-email') {
+         setError('Format email tidak valid.');
+      } else {
+        setError('Gagal login: ' + err.message);
+      }
+    } finally {
+      setIsAuthenticating(false);
+    }
   };
 
   return (
@@ -46,22 +62,22 @@ export default function LoginModal({ onClose, onSuccess }) {
                 <Lock size={28} />
             </div>
             <h3 className="text-2xl font-bold text-slate-900">Akses Admin</h3>
-            <p className="text-sm text-slate-500">Masukkan kredensial Kadus untuk mengedit konten.</p>
+            <p className="text-sm text-slate-500">Masuk menggunakan akun Firebase Admin.</p>
         </div>
 
         {/* Form */}
         <form onSubmit={handleLogin}>
           
-          {/* Username */}
+          {/* Email Input (Dulu Username) */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-slate-700 mb-1">Username</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
             <div className="flex items-center border border-slate-300 rounded-xl px-4 py-3 bg-slate-50 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
-              <User size={18} className="text-slate-400 mr-3" />
+              <Mail size={18} className="text-slate-400 mr-3" />
               <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="username"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@dusun.com"
                 required
                 disabled={isAuthenticating}
                 className="w-full bg-transparent focus:outline-none text-slate-800"
@@ -69,14 +85,13 @@ export default function LoginModal({ onClose, onSuccess }) {
             </div>
           </div>
 
-          {/* Password (BAGIAN INI YANG DIUPDATE) */}
+          {/* Password */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
             <div className="flex items-center border border-slate-300 rounded-xl px-4 py-3 bg-slate-50 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
               <Key size={18} className="text-slate-400 mr-3" />
               
               <input
-                // Ubah type berdasarkan state showPassword
                 type={showPassword ? "text" : "password"} 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -86,12 +101,11 @@ export default function LoginModal({ onClose, onSuccess }) {
                 className="w-full bg-transparent focus:outline-none text-slate-800"
               />
 
-              {/* Tombol Mata */}
               <button
-                type="button" // PENTING: tipe button agar tidak men-submit form
+                type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="ml-2 text-slate-400 hover:text-blue-600 transition-colors focus:outline-none"
-                tabIndex="-1" // Agar tidak bisa di-tab (opsional)
+                tabIndex="-1"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -112,11 +126,11 @@ export default function LoginModal({ onClose, onSuccess }) {
             className="w-full py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-500/50 flex items-center justify-center gap-2"
           >
             {isAuthenticating ? <Loader2 size={20} className="animate-spin" /> : <LogIn size={20} />}
-            {isAuthenticating ? 'Memverifikasi...' : 'Login Sekarang'}
+            {isAuthenticating ? 'Memverifikasi...' : 'Login Aman'}
           </button>
         </form>
         
-        <p className="text-xs text-slate-400 text-center mt-6">Hanya untuk administrasi dusun.</p>
+        <p className="text-xs text-slate-400 text-center mt-6">Sistem Terproteksi Firebase Auth v9</p>
       </div>
     </div>
   );

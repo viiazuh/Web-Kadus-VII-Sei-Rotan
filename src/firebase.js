@@ -1,26 +1,24 @@
-// Import fungsi utama Firebase
 import { initializeApp } from "firebase/app";
-// Import layanan yang DIBUTUHKAN oleh fitur Admin kamu
 import { getFirestore, serverTimestamp } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+// PENTING: Kita butuh Auth untuk Login Admin
+import { getAuth } from "firebase/auth"; 
 
-// Konfigurasi Project Kamu (Ini data asli dari yang kamu kirim tadi)
 const firebaseConfig = {
-  apiKey: "AIzaSyAWmVdaEOpRt13J5_K2_MddwRaD3FBFp7k",
-  authDomain: "web-dusun-vii.firebaseapp.com",
-  projectId: "web-dusun-vii",
-  storageBucket: "web-dusun-vii.firebasestorage.app", // Perhatikan ini kadang beda dikit, tapi kita pakai default dulu
-  messagingSenderId: "449301658416",
-  appId: "1:449301658416:web:a301586d3be1302a12e6f5",
-  measurementId: "G-FBZKEXY9X9"
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID
 };
 
-// 1. Mulai Aplikasi Firebase
+// 1. Mulai Aplikasi
 const app = initializeApp(firebaseConfig);
 
-// 2. Aktifkan Database & Storage
+// 2. Aktifkan Layanan
 const db = getFirestore(app);
-const storage = getStorage(app);
+const auth = getAuth(app); // Untuk Login
 
-// 3. Export agar bisa dipakai di InfoSection.jsx dan ActivityGallery.jsx
-export { db, storage, serverTimestamp };
+// 3. Export (db untuk data, auth untuk login, serverTimestamp untuk waktu)
+export { db, auth, serverTimestamp };

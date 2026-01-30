@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, CameraOff, Image as ImageIcon, Send, Loader2, Trash2, Lock, Clock } from 'lucide-react';
 import { db, serverTimestamp } from '../firebase'; 
-// Hapus import 'storage' karena kita pakai Cloudinary
 import { collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
 
 export default function ActivityGallery({ fullPage, isAdmin }) {
@@ -11,12 +10,10 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
   const [imagePreview, setImagePreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  // --- KONFIGURASI CLOUDINARY ---
-  // 1. Cloud Name (Ini dari screenshot kamu tadi)
-  const CLOUD_NAME = "dbsymebpf"; 
-  // 2. Upload Preset (GANTI INI dengan nama preset yang kamu buat tadi, misal: "dusun_preset")
-  const UPLOAD_PRESET = "dusun_preset"; 
-  // -----------------------------
+  // --- BAGIAN INI YANG DIUBAH (Ambil dari .env) ---
+  const CLOUD_NAME = import.meta.env.VITE_CLOUD_NAME; 
+  const UPLOAD_PRESET = import.meta.env.VITE_UPLOAD_PRESET; 
+  // ------------------------------------------------
 
   // 1. AMBIL DATA REALTIME
   useEffect(() => {
@@ -35,7 +32,7 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 5000000) { // Cek ukuran file (maks 5MB)
+      if (file.size > 5000000) { 
         alert("Ukuran foto terlalu besar! Maksimal 5MB.");
         return;
       }
@@ -57,7 +54,7 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
       if (imageFile) {
         const formData = new FormData();
         formData.append("file", imageFile);
-        formData.append("upload_preset", UPLOAD_PRESET); // Kunci rahasia
+        formData.append("upload_preset", UPLOAD_PRESET); 
 
         // Kirim ke Cloudinary
         const response = await fetch(
@@ -68,10 +65,10 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
         const data = await response.json();
         
         if (data.secure_url) {
-            imageUrl = data.secure_url; // Dapat Link Gambar!
+            imageUrl = data.secure_url; 
         } else {
             console.error("Cloudinary Error:", data);
-            throw new Error("Gagal upload gambar. Cek nama Preset Anda.");
+            throw new Error("Gagal upload gambar. Cek koneksi atau preset.");
         }
       }
 
@@ -133,14 +130,12 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
                  <img src="/maslilik.jpg" alt="Admin" className="w-10 h-10 rounded-full object-cover border border-slate-200" />
               </div>
               <div className="flex-grow">
-                {/* Header Kecil */}
                 <div className="flex justify-between items-center mb-2">
                     <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded flex items-center gap-1 uppercase tracking-wider">
                         <Lock size={10} /> Mode Admin
                     </span>
                 </div>
 
-                {/* Input Teks */}
                 <textarea
                   value={newCaption}
                   onChange={(e) => setNewCaption(e.target.value)}
@@ -149,7 +144,6 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
                   className="w-full bg-slate-50 rounded-lg p-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-200 resize-none h-24 disabled:bg-slate-100 transition-all placeholder:text-slate-400"
                 ></textarea>
                 
-                {/* Preview Gambar */}
                 {imagePreview && (
                   <div className="mt-3 relative group">
                     <img src={imagePreview} alt="Preview" className="w-full h-48 object-cover rounded-lg border border-slate-200 shadow-sm" />
@@ -163,17 +157,13 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
                   </div>
                 )}
 
-                {/* Footer Form */}
                 <div className="flex justify-between items-center mt-3 pt-3 border-t border-slate-100">
-                  
-                  {/* Tombol Pilih Foto */}
                   <label className={`flex items-center gap-2 px-3 py-2 text-blue-600 rounded-lg cursor-pointer hover:bg-blue-50 transition text-sm font-bold ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     <ImageIcon size={18} />
                     <span>{imageFile ? 'Ganti Foto' : 'Tambah Foto'}</span>
                     <input type="file" accept="image/*" className="hidden" onChange={handleImageSelect} disabled={isUploading} />
                   </label>
                   
-                  {/* Tombol Kirim */}
                   <button 
                     onClick={handlePost}
                     disabled={(!newCaption && !imageFile) || isUploading}
@@ -203,8 +193,6 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
           ) : (
             posts.map((post) => (
                 <div key={post.id} className="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-                  
-                  {/* Header Post */}
                   <div className="p-4 flex justify-between items-start bg-gradient-to-b from-slate-50/50 to-transparent">
                     <div className="flex gap-3">
                       <div className="relative">
@@ -222,8 +210,6 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
                         </div>
                       </div>
                     </div>
-                    
-                    {/* Tombol Hapus (UI Hapus) */}
                     {isAdmin && (
                         <button 
                         onClick={() => handleDelete(post.id)}
@@ -235,7 +221,6 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
                     )}
                   </div>
 
-                  {/* Caption */}
                   {post.caption && (
                     <div className="px-5 pb-3 pt-1">
                         <p className="text-slate-700 whitespace-pre-line leading-relaxed text-sm md:text-[15px] font-normal">
@@ -244,7 +229,6 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
                     </div>
                   )}
 
-                  {/* Gambar */}
                   {post.image && (
                     <div className="w-full bg-slate-100 border-t border-slate-100">
                       <img 
@@ -256,18 +240,15 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
                     </div>
                   )}
                   
-                  {/* Footer Post */}
                   <div className="px-5 py-3 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
                       <span className="text-xs font-semibold text-slate-400 flex items-center gap-1">
                          <span className="w-2 h-2 bg-green-500 rounded-full"></span> Resmi Dusun VII
                       </span>
                   </div>
-
                 </div>
             ))
           )}
         </div>
-
       </div>
     </section>
   );
