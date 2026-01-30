@@ -62,7 +62,7 @@ export default function LoginModal({ onClose, onSuccess }) {
                 <Lock size={28} />
             </div>
             <h3 className="text-2xl font-bold text-slate-900">Akses Admin</h3>
-            <p className="text-sm text-slate-500">Masuk menggunakan akun Firebase Admin.</p>
+            <p className="text-sm text-slate-500">Akses Admin.</p>
         </div>
 
         {/* Form */}
@@ -130,7 +130,7 @@ export default function LoginModal({ onClose, onSuccess }) {
           </button>
         </form>
         
-        <p className="text-xs text-slate-400 text-center mt-6">Sistem Terproteksi Firebase Auth v9</p>
+        <p className="text-xs text-slate-400 text-center mt-6">Hanya Admin</p>
       </div>
     </div>
   );
