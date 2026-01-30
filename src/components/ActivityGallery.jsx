@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { MapPin, CameraOff, Image as ImageIcon, Send, Loader2, Trash2, Lock, Clock, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+// Pastikan import ChevronLeft dan ChevronRight ada
+import { MapPin, CameraOff, Image as ImageIcon, Send, Loader2, Trash2, Lock, Clock, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { db, serverTimestamp } from '../firebase'; 
 import { collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
 
-// --- KOMPONEN BARU: SLIDER GESER (SCROLL SNAP) ---
+// --- KOMPONEN SLIDER HYBRID (SWIPE + PANAH) ---
 const ImageSlider = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const sliderRef = useRef(null); // Ref untuk mengontrol scroll container
 
   if (!images || images.length === 0) return null;
 
-  // Kalau cuma 1 gambar, tampil biasa
   if (images.length === 1) {
     return (
       <img 
@@ -20,13 +21,28 @@ const ImageSlider = ({ images }) => {
     );
   }
 
-  // Fungsi untuk mendeteksi kita lagi di slide nomor berapa saat digeser
-  const handleScroll = (e) => {
-    const scrollLeft = e.target.scrollLeft;
-    const width = e.target.offsetWidth;
-    // Hitung index berdasarkan posisi scroll
-    const index = Math.round(scrollLeft / width);
-    setCurrentIndex(index);
+  // Fungsi Deteksi Index saat digeser
+  const handleScroll = () => {
+    if (sliderRef.current) {
+      const scrollLeft = sliderRef.current.scrollLeft;
+      const width = sliderRef.current.offsetWidth;
+      const index = Math.round(scrollLeft / width);
+      setCurrentIndex(index);
+    }
+  };
+
+  // Fungsi Klik Panah Kiri (Desktop)
+  const scrollLeft = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({ left: -sliderRef.current.offsetWidth, behavior: 'smooth' });
+    }
+  };
+
+  // Fungsi Klik Panah Kanan (Desktop)
+  const scrollRight = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({ left: sliderRef.current.offsetWidth, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -34,39 +50,57 @@ const ImageSlider = ({ images }) => {
       
       {/* CONTAINER GESER (Scroll Snap) */}
       <div 
+        ref={sliderRef} // Pasang Ref di sini
         className="w-full h-full flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
         onScroll={handleScroll}
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} // Sembunyikan scrollbar di Firefox/IE
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} 
       >
-        {/* Loop Gambar */}
         {images.map((img, idx) => (
           <img 
             key={idx}
             src={img}
             alt={`Slide ${idx}`}
-            className="w-full h-full object-cover flex-shrink-0 snap-center" // snap-center bikin gambar pas di tengah pas berhenti geser
+            className="w-full h-full object-cover flex-shrink-0 snap-center" 
           />
         ))}
       </div>
 
-      {/* INDIKATOR TITIK (DOTS) */}
-      <div className="absolute bottom-4 w-full flex justify-center py-2 gap-2 z-10">
+      {/* --- TOMBOL PANAH (Hanya Muncul di Desktop / md ke atas) --- */}
+      
+      {/* Tombol Kiri */}
+      <button 
+        onClick={scrollLeft}
+        // Class 'hidden md:flex' artinya: Hilang di HP, Muncul (Flex) di Layar Medium/Laptop
+        className="hidden md:flex absolute top-1/2 -translate-y-1/2 left-4 bg-black/40 hover:bg-black/70 text-white p-2 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
+      >
+        <ChevronLeft size={24} />
+      </button>
+
+      {/* Tombol Kanan */}
+      <button 
+        onClick={scrollRight}
+        className="hidden md:flex absolute top-1/2 -translate-y-1/2 right-4 bg-black/40 hover:bg-black/70 text-white p-2 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
+      >
+        <ChevronRight size={24} />
+      </button>
+
+      {/* --- INDIKATOR TITIK (Muncul di HP & Desktop) --- */}
+      <div className="absolute bottom-4 w-full flex justify-center py-2 gap-2 z-10 pointer-events-none">
         {images.map((_, slideIndex) => (
           <div
             key={slideIndex}
-            className={`w-2 h-2 rounded-full transition-all duration-300 shadow-sm ${
-              currentIndex === slideIndex ? 'bg-white scale-125 w-4' : 'bg-white/50'
+            className={`h-1.5 rounded-full transition-all duration-300 shadow-sm ${
+              currentIndex === slideIndex ? 'bg-white w-6' : 'bg-white/40 w-1.5'
             }`}
           ></div>
         ))}
       </div>
       
-      {/* Badge Nomor Slide (Pojok Kanan Atas) */}
-      <div className="absolute top-4 right-4 bg-black/60 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm border border-white/10">
-        {currentIndex + 1} / {images.length}
+      {/* Badge Nomor */}
+      <div className="absolute top-4 right-4 bg-black/60 text-white text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-sm border border-white/10">
+        {currentIndex + 1}/{images.length}
       </div>
 
-      {/* CSS Tambahan buat sembunyikan Scrollbar Chrome/Safari */}
       <style>{`
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
@@ -76,7 +110,7 @@ const ImageSlider = ({ images }) => {
   );
 };
 
-// --- BAGIAN UTAMA (SAMA SEPERTI SEBELUMNYA) ---
+// --- BAGIAN UTAMA (Tidak Berubah Banyak, cuma logic panggil ImageSlider) ---
 export default function ActivityGallery({ fullPage, isAdmin }) {
   const [posts, setPosts] = useState([]);
   const [newCaption, setNewCaption] = useState("");
@@ -84,11 +118,9 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
   const [imagePreviews, setImagePreviews] = useState([]); 
   const [isUploading, setIsUploading] = useState(false);
 
-  // CONFIG .ENV
   const CLOUD_NAME = import.meta.env.VITE_CLOUD_NAME; 
   const UPLOAD_PRESET = import.meta.env.VITE_UPLOAD_PRESET; 
 
-  // 1. AMBIL DATA
   useEffect(() => {
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -97,7 +129,6 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
     return () => unsubscribe(); 
   }, []);
 
-  // Handle Pilih Banyak Foto
   const handleImageSelect = (e) => {
     const files = Array.from(e.target.files);
     if (files.length > 0) {
@@ -117,11 +148,9 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
     setImagePreviews(newPreviews);
   };
 
-  // 2. UPLOAD MULTIPLE
   const handlePost = async () => {
     if (!isAdmin || (!newCaption && imageFiles.length === 0)) return;
     setIsUploading(true);
-
     try {
       let uploadedImageUrls = [];
       if (imageFiles.length > 0) {
@@ -135,7 +164,6 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
         });
         uploadedImageUrls = await Promise.all(uploadPromises);
       }
-
       await addDoc(collection(db, "posts"), {
         author: "H. Lilik Suheri, S.Pd.",
         caption: newCaption,
@@ -143,7 +171,6 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
         images: uploadedImageUrls, 
         createdAt: serverTimestamp() 
       });
-
       setNewCaption("");
       setImageFiles([]);
       setImagePreviews([]);
@@ -169,13 +196,11 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
   return (
     <section id="gallery" className={`py-20 bg-transparent ${fullPage ? 'pt-28 min-h-screen' : ''}`}>
       <div className="max-w-2xl mx-auto px-4 sm:px-6">
-        
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold text-slate-900">Dokumentasi Kegiatan</h2>
           <p className="mt-3 text-slate-500">Jurnal kegiatan dan aktivitas dusun sehari-hari.</p>
         </div>
 
-        {/* FORM UPLOAD */}
         {isAdmin && (
           <div className="bg-white p-4 rounded-xl shadow-xl border border-blue-200 mb-8 sticky top-20 z-30 ring-4 ring-blue-500/10">
             <div className="flex gap-4">
@@ -187,7 +212,6 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
                   placeholder="Tulis caption kegiatan..." disabled={isUploading}
                   className="w-full bg-slate-50 rounded-lg p-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-200 resize-none h-24"
                 ></textarea>
-                
                 {imagePreviews.length > 0 && (
                   <div className="mt-3 grid grid-cols-3 gap-2">
                     {imagePreviews.map((url, idx) => (
@@ -198,7 +222,6 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
                     ))}
                   </div>
                 )}
-
                 <div className="flex justify-between items-center mt-3 pt-3 border-t border-slate-100">
                   <label className={`flex items-center gap-2 px-3 py-2 text-blue-600 rounded-lg cursor-pointer hover:bg-blue-50 font-bold text-sm ${isUploading ? 'opacity-50' : ''}`}>
                     <ImageIcon size={18} />
@@ -215,7 +238,6 @@ export default function ActivityGallery({ fullPage, isAdmin }) {
           </div>
         )}
 
-        {/* LIST POSTINGAN */}
         <div className="space-y-8">
           {posts.map((post) => (
             <div key={post.id} className="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100 overflow-hidden">
