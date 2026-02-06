@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
-import { Shield, Bell, MessageCircle, Edit, Send, Loader2, Lock, Megaphone, Trash2 } from 'lucide-react';
+import { Shield, Bell, MessageCircle, Edit, Send, Loader2, Lock, Megaphone, Trash2 } from 'lucide-react'; 
 import { db, serverTimestamp } from '../firebase'; 
 import { collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot } from 'firebase/firestore'; 
-=======
-import { Shield, Bell, MessageCircle, Edit, Send, Loader2, Lock, Megaphone, Trash2 } from 'lucide-react'; // Tambah Trash2
-import { db, serverTimestamp } from '../firebase'; 
-import { collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot } from 'firebase/firestore'; // Tambah deleteDoc
->>>>>>> e4cca922a7dc6570ff3596c34a487125cce3c584
 
 // --- MODAL EDIT ---
 const EditAnnouncementModal = ({ announcement, onClose, onSave }) => {
@@ -93,26 +87,20 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
     }
   };
 
-  // 3. FUNGSI HAPUS (INI YANG BARU)
+  // 3. FUNGSI HAPUS
   const handleDelete = async () => {
-<<<<<<< HEAD
-    if (!isAdmin || !announcement) return; 
-=======
-    if (!isAdmin || !announcement) return; // Cek admin & cek ada data gak
->>>>>>> e4cca922a7dc6570ff3596c34a487125cce3c584
+    if (!isAdmin || !announcement) return;
     
     if (confirm("Apakah Anda yakin ingin MENGHAPUS pengumuman ini? Data akan hilang dari database.")) {
         try {
-            // Hapus dokumen dari Firebase biar bersih
             await deleteDoc(doc(db, "announcements", announcement.id));
-            setAnnouncement(null); // Kosongkan tampilan
+            setAnnouncement(null); 
         } catch (error) {
             alert("Gagal menghapus: " + error.message);
         }
     }
   };
 
-  // Default Text (Muncul kalau database kosong/dihapus)
   const currentCaption = announcement?.caption || 
        "Belum ada pengumuman resmi dari Dusun. Silakan cek kembali nanti untuk informasi terbaru.";
 
@@ -146,10 +134,11 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
                             <p className="text-sm text-slate-500">Info resmi dari Kepala Dusun</p>
                         </div>
                     </div>
+
+                    {/* AREA TOMBOL ADMIN */}
                     <div className="flex gap-2">
                         {isAdmin ? (
                             <>
-                                {/* Tombol Edit */}
                                 <button 
                                     onClick={() => setShowModal(true)} 
                                     className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all border border-transparent hover:border-blue-100 flex items-center gap-2"
@@ -159,12 +148,11 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
                                     <Edit size={18} />
                                 </button>
                                 
-                                {/* Tombol Hapus (Hanya muncul kalau ada pengumuman di DB) */}
                                 {announcement && (
                                     <button 
                                         onClick={handleDelete} 
                                         className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all border border-transparent hover:border-red-100"
-                                        title="Hapus Pengumuman (Bersihkan Database)"
+                                        title="Hapus Pengumuman"
                                     >
                                         <Trash2 size={18} />
                                     </button>
