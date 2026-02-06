@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Bell, MessageCircle, Edit, Send, Loader2, Lock, Megaphone } from 'lucide-react';
+import { Shield, Bell, MessageCircle, Edit, Send, Loader2, Lock, Megaphone, Trash2 } from 'lucide-react'; // Tambah Trash2
 import { db, serverTimestamp } from '../firebase'; 
-import { collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot } from 'firebase/firestore'; // Tambah deleteDoc
 
-// --- MODAL EDIT (Biar Admin bisa ganti isinya) ---
+// --- MODAL EDIT ---
 const EditAnnouncementModal = ({ announcement, onClose, onSave }) => {
   const [caption, setCaption] = useState(announcement.caption || "");
   const [isSaving, setIsSaving] = useState(false);
@@ -19,7 +19,6 @@ const EditAnnouncementModal = ({ announcement, onClose, onSave }) => {
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6">
         <h3 className="text-xl font-bold text-slate-900 mb-4 border-b pb-2">Edit Pengumuman</h3>
-        
         <div className="mb-4">
             <label className="block text-sm font-bold text-slate-700 mb-2">Isi Pesan:</label>
             <textarea
@@ -30,7 +29,6 @@ const EditAnnouncementModal = ({ announcement, onClose, onSave }) => {
             className="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-slate-700 resize-none"
             ></textarea>
         </div>
-
         <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
           <button onClick={onClose} className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition font-medium">Batal</button>
           <button onClick={handleSave} disabled={isSaving} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2 font-bold shadow-lg shadow-blue-500/30">
@@ -52,7 +50,7 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
     phone: "6282294959654", 
   };
 
-  // 1. AMBIL DATA DARI DB
+  // 1. AMBIL DATA
   useEffect(() => {
     const q = query(collection(db, "announcements"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -89,7 +87,22 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
     }
   };
 
-  // Default Text kalau DB kosong
+  // 3. FUNGSI HAPUS (INI YANG BARU)
+  const handleDelete = async () => {
+    if (!isAdmin || !announcement) return; // Cek admin & cek ada data gak
+    
+    if (confirm("Apakah Anda yakin ingin MENGHAPUS pengumuman ini? Data akan hilang dari database.")) {
+        try {
+            // Hapus dokumen dari Firebase biar bersih
+            await deleteDoc(doc(db, "announcements", announcement.id));
+            setAnnouncement(null); // Kosongkan tampilan
+        } catch (error) {
+            alert("Gagal menghapus: " + error.message);
+        }
+    }
+  };
+
+  // Default Text (Muncul kalau database kosong/dihapus)
   const currentCaption = announcement?.caption || 
        "Belum ada pengumuman resmi dari Dusun. Silakan cek kembali nanti untuk informasi terbaru.";
 
@@ -97,7 +110,6 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
     <section id="info" className="py-24 relative overflow-hidden bg-white/30 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         
-        {/* HEADER */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50/80 border border-blue-100 text-blue-600 text-sm font-bold mb-4 shadow-sm backdrop-blur-sm">
             <Shield size={16} />
@@ -108,17 +120,13 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
           </h2>
         </div>
 
-        {/* --- PAPAN PENGUMUMAN (NORMAL/BIRU) --- */}
-        {/* Bagian ini yang DULU merah, sekarang jadi Putih/Biru Normal */}
+        {/* --- PAPAN PENGUMUMAN --- */}
         <div className="max-w-5xl mx-auto mb-16">
           <div className="relative overflow-hidden bg-white rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50">
-            
-            {/* Dekorasi Garis Biru di Atas (Ganti Merah) */}
             <div className="h-2 w-full bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-600"></div>
 
             <div className="p-6 md:p-8">
                 <div className="flex justify-between items-start mb-6">
-                    {/* Judul Papan (Ganti "PERINGATAN DARURAT") */}
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
                             <Megaphone size={24} />
@@ -129,27 +137,43 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
                         </div>
                     </div>
 
-                    {/* Tombol Edit Admin */}
-                    {isAdmin ? (
-                        <button 
-                            onClick={() => setShowModal(true)} 
-                            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all border border-transparent hover:border-blue-100 flex items-center gap-2"
-                        >
-                            <span className="text-xs font-bold hidden md:block">Edit Info</span>
-                            <Edit size={18} />
-                        </button>
-                    ) : (
-                         <button
-                            onClick={onLoginRequired}
-                            className="p-2 bg-slate-50 text-slate-400 rounded-lg hover:text-blue-600 transition-all"
-                            title="Admin Login"
-                          >
-                            <Lock size={16} />
-                          </button>
-                    )}
+                    {/* AREA TOMBOL ADMIN */}
+                    <div className="flex gap-2">
+                        {isAdmin ? (
+                            <>
+                                {/* Tombol Edit */}
+                                <button 
+                                    onClick={() => setShowModal(true)} 
+                                    className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all border border-transparent hover:border-blue-100 flex items-center gap-2"
+                                    title="Edit Pengumuman"
+                                >
+                                    <span className="text-xs font-bold hidden md:block">Edit</span>
+                                    <Edit size={18} />
+                                </button>
+                                
+                                {/* Tombol Hapus (Hanya muncul kalau ada pengumuman di DB) */}
+                                {announcement && (
+                                    <button 
+                                        onClick={handleDelete} 
+                                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all border border-transparent hover:border-red-100"
+                                        title="Hapus Pengumuman (Bersihkan Database)"
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
+                                )}
+                            </>
+                        ) : (
+                            <button
+                                onClick={onLoginRequired}
+                                className="p-2 bg-slate-50 text-slate-400 rounded-lg hover:text-blue-600 transition-all"
+                                title="Admin Login"
+                            >
+                                <Lock size={16} />
+                            </button>
+                        )}
+                    </div>
                 </div>
 
-                {/* ISI PENGUMUMAN (Dari Database) */}
                 <div className="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
                     <div className="text-slate-700 leading-relaxed font-medium text-lg whitespace-pre-line">
                         {currentCaption}
@@ -161,7 +185,6 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
 
         {/* --- GRID POSKAMLING & KONTAK --- */}
         <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* KARTU POSKAMLING */}
             <div className="bg-slate-900/95 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 text-white relative overflow-hidden shadow-2xl group border border-slate-800">
                 <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[conic-gradient(from_0deg,transparent_0_340deg,rgba(59,130,246,0.3)_360deg)] animate-[spin_8s_linear_infinite] opacity-40 pointer-events-none"></div>
                 <div className="relative z-10">
@@ -186,7 +209,6 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
                 </div>
             </div>
 
-            {/* KARTU KONTAK */}
             <div className="bg-white/70 backdrop-blur-md rounded-[2.5rem] border border-white/50 shadow-xl shadow-slate-200/50 p-1 flex flex-col h-full">
                 <div className="p-8 pb-4">
                     <div className="flex items-center gap-3 mb-2">
@@ -206,7 +228,6 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
         </div>
       </div>
       
-      {/* MODAL POPUP */}
       {showModal && (
           <EditAnnouncementModal 
              announcement={announcement || { caption: "" }} 
