@@ -11,8 +11,8 @@ import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import PageDecorator from './ui/PageDecorator';
 import LoginModal from './ui/LoginModal'; 
-import { Loader2, Lock, Unlock } from 'lucide-react'; // Tambah icon Lock/Unlock
-
+import { Loader2, Lock, Unlock } from 'lucide-react'; 
+import { SpeedInsights } from "@vercel/speed-insights/react";
 // Fungsi navigasi URL
 const getPageFromPath = (path) => {
   const pathName = path.replace('/', '');
@@ -155,6 +155,9 @@ export default function App() {
 
       <ContactSection personalInfo={personalInfo} />
       <Footer personalInfo={personalInfo} />
+
+
+      <SpeedInsights />
     </div>
   );
 }
