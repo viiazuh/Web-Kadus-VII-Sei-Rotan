@@ -109,15 +109,16 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
         </div>
 
         {/* --- PAPAN PENGUMUMAN (NORMAL/BIRU) --- */}
+        {/* Bagian ini yang DULU merah, sekarang jadi Putih/Biru Normal */}
         <div className="max-w-5xl mx-auto mb-16">
           <div className="relative overflow-hidden bg-white rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50">
             
-            {/* Dekorasi Atas */}
+            {/* Dekorasi Garis Biru di Atas (Ganti Merah) */}
             <div className="h-2 w-full bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-600"></div>
 
             <div className="p-6 md:p-8">
                 <div className="flex justify-between items-start mb-6">
-                    {/* Judul Papan */}
+                    {/* Judul Papan (Ganti "PERINGATAN DARURAT") */}
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
                             <Megaphone size={24} />
