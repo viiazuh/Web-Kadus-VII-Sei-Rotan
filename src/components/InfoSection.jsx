@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { Shield, Bell, MessageCircle, Edit, Send, Loader2, Lock, Megaphone, Trash2 } from 'lucide-react';
 import { db, serverTimestamp } from '../firebase'; 
 import { collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot } from 'firebase/firestore'; 
+=======
+import { Shield, Bell, MessageCircle, Edit, Send, Loader2, Lock, Megaphone, Trash2 } from 'lucide-react'; // Tambah Trash2
+import { db, serverTimestamp } from '../firebase'; 
+import { collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot } from 'firebase/firestore'; // Tambah deleteDoc
+>>>>>>> e4cca922a7dc6570ff3596c34a487125cce3c584
 
 // --- MODAL EDIT ---
 const EditAnnouncementModal = ({ announcement, onClose, onSave }) => {
@@ -89,7 +95,11 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
 
   // 3. FUNGSI HAPUS (INI YANG BARU)
   const handleDelete = async () => {
+<<<<<<< HEAD
     if (!isAdmin || !announcement) return; 
+=======
+    if (!isAdmin || !announcement) return; // Cek admin & cek ada data gak
+>>>>>>> e4cca922a7dc6570ff3596c34a487125cce3c584
     
     if (confirm("Apakah Anda yakin ingin MENGHAPUS pengumuman ini? Data akan hilang dari database.")) {
         try {
@@ -136,8 +146,6 @@ export default function InfoSection({ isAdmin, onLoginRequired }) {
                             <p className="text-sm text-slate-500">Info resmi dari Kepala Dusun</p>
                         </div>
                     </div>
-
-                    {/* AREA TOMBOL ADMIN */}
                     <div className="flex gap-2">
                         {isAdmin ? (
                             <>
